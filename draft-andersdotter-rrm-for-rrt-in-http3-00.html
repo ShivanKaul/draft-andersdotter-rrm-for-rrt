@@ -1,0 +1,649 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head profile="http://www.w3.org/2006/03/hcard http://dublincore.org/documents/2008/08/04/dc-html/">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>Randomized Response Mechanisms in RRT Measurements for HTTP/3</title>
+
+  <style type="text/css" title="Xml2Rfc (sans serif)">
+  /*<![CDATA[*/
+	  a {
+	  text-decoration: none;
+	  }
+      /* info code from SantaKlauss at http://www.madaboutstyle.com/tooltip2.html */
+      a.info {
+          /* This is the key. */
+          position: relative;
+          z-index: 24;
+          text-decoration: none;
+      }
+      a.info:hover {
+          z-index: 25;
+          color: #FFF; background-color: #900;
+      }
+      a.info span { display: none; }
+      a.info:hover span.info {
+          /* The span will display just on :hover state. */
+          display: block;
+          position: absolute;
+          font-size: smaller;
+          top: 2em; left: -5em; width: 15em;
+          padding: 2px; border: 1px solid #333;
+          color: #900; background-color: #EEE;
+          text-align: left;
+      }
+	  a.smpl {
+	  color: black;
+	  }
+	  a:hover {
+	  text-decoration: underline;
+	  }
+	  a:active {
+	  text-decoration: underline;
+	  }
+	  address {
+	  margin-top: 1em;
+	  margin-left: 2em;
+	  font-style: normal;
+	  }
+	  body {
+	  color: black;
+	  font-family: verdana, helvetica, arial, sans-serif;
+	  font-size: 10pt;
+	  max-width: 55em;
+	  
+	  }
+	  cite {
+	  font-style: normal;
+	  }
+	  dd {
+	  margin-right: 2em;
+	  }
+	  dl {
+	  margin-left: 2em;
+	  }
+	
+	  ul.empty {
+	  list-style-type: none;
+	  }
+	  ul.empty li {
+	  margin-top: .5em;
+	  }
+	  dl p {
+	  margin-left: 0em;
+	  }
+	  dt {
+	  margin-top: .5em;
+	  }
+	  h1 {
+	  font-size: 14pt;
+	  line-height: 21pt;
+	  page-break-after: avoid;
+	  }
+	  h1.np {
+	  page-break-before: always;
+	  }
+	  h1 a {
+	  color: #333333;
+	  }
+	  h2 {
+	  font-size: 12pt;
+	  line-height: 15pt;
+	  page-break-after: avoid;
+	  }
+	  h3, h4, h5, h6 {
+	  font-size: 10pt;
+	  page-break-after: avoid;
+	  }
+	  h2 a, h3 a, h4 a, h5 a, h6 a {
+	  color: black;
+	  }
+	  img {
+	  margin-left: 3em;
+	  }
+	  li {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  ol p {
+	  margin-left: 0em;
+	  }
+	  p {
+	  margin-left: 2em;
+	  margin-right: 2em;
+	  }
+	  pre {
+	  margin-left: 3em;
+	  background-color: lightyellow;
+	  padding: .25em;
+	  }
+	  pre.text2 {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f0f0f0;
+	  width: 69em;
+	  }
+	  pre.inline {
+	  background-color: white;
+	  padding: 0em;
+	  }
+	  pre.text {
+	  border-style: dotted;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  width: 69em;
+	  }
+	  pre.drawing {
+	  border-style: solid;
+	  border-width: 1px;
+	  background-color: #f8f8f8;
+	  padding: 2em;
+	  }
+	  table {
+	  margin-left: 2em;
+	  }
+	  table.tt {
+	  vertical-align: top;
+	  }
+	  table.full {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.headers {
+	  border-style: outset;
+	  border-width: 1px;
+	  }
+	  table.tt td {
+	  vertical-align: top;
+	  }
+	  table.full td {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.tt th {
+	  vertical-align: top;
+	  }
+	  table.full th {
+	  border-style: inset;
+	  border-width: 1px;
+	  }
+	  table.headers th {
+	  border-style: none none inset none;
+	  border-width: 1px;
+	  }
+	  table.left {
+	  margin-right: auto;
+	  }
+	  table.right {
+	  margin-left: auto;
+	  }
+	  table.center {
+	  margin-left: auto;
+	  margin-right: auto;
+	  }
+	  caption {
+	  caption-side: bottom;
+	  font-weight: bold;
+	  font-size: 9pt;
+	  margin-top: .5em;
+	  }
+	
+	  table.header {
+	  border-spacing: 1px;
+	  width: 95%;
+	  font-size: 10pt;
+	  color: white;
+	  }
+	  td.top {
+	  vertical-align: top;
+	  }
+	  td.topnowrap {
+	  vertical-align: top;
+	  white-space: nowrap; 
+	  }
+	  table.header td {
+	  background-color: gray;
+	  width: 50%;
+	  }
+	  table.header a {
+	  color: white;
+	  }
+	  td.reference {
+	  vertical-align: top;
+	  white-space: nowrap;
+	  padding-right: 1em;
+	  }
+	  thead {
+	  display:table-header-group;
+	  }
+	  ul.toc, ul.toc ul {
+	  list-style: none;
+	  margin-left: 1.5em;
+	  margin-right: 0em;
+	  padding-left: 0em;
+	  }
+	  ul.toc li {
+	  line-height: 150%;
+	  font-weight: bold;
+	  font-size: 10pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  ul.toc li li {
+	  line-height: normal;
+	  font-weight: normal;
+	  font-size: 9pt;
+	  margin-left: 0em;
+	  margin-right: 0em;
+	  }
+	  li.excluded {
+	  font-size: 0pt;
+	  }
+	  ul p {
+	  margin-left: 0em;
+	  }
+	
+	  .comment {
+	  background-color: yellow;
+	  }
+	  .center {
+	  text-align: center;
+	  }
+	  .error {
+	  color: red;
+	  font-style: italic;
+	  font-weight: bold;
+	  }
+	  .figure {
+	  font-weight: bold;
+	  text-align: center;
+	  font-size: 9pt;
+	  }
+	  .filename {
+	  color: #333333;
+	  font-weight: bold;
+	  font-size: 12pt;
+	  line-height: 21pt;
+	  text-align: center;
+	  }
+	  .fn {
+	  font-weight: bold;
+	  }
+	  .hidden {
+	  display: none;
+	  }
+	  .left {
+	  text-align: left;
+	  }
+	  .right {
+	  text-align: right;
+	  }
+	  .title {
+	  color: #990000;
+	  font-size: 18pt;
+	  line-height: 18pt;
+	  font-weight: bold;
+	  text-align: center;
+	  margin-top: 36pt;
+	  }
+	  .vcardline {
+	  display: block;
+	  }
+	  .warning {
+	  font-size: 14pt;
+	  background-color: yellow;
+	  }
+	
+	
+	  @media print {
+	  .noprint {
+		display: none;
+	  }
+	
+	  a {
+		color: black;
+		text-decoration: none;
+	  }
+	
+	  table.header {
+		width: 90%;
+	  }
+	
+	  td.header {
+		width: 50%;
+		color: black;
+		background-color: white;
+		vertical-align: top;
+		font-size: 12pt;
+	  }
+	
+	  ul.toc a::after {
+		content: leader('.') target-counter(attr(href), page);
+	  }
+	
+	  ul.ind li li a {
+		content: target-counter(attr(href), page);
+	  }
+	
+	  .print2col {
+		column-count: 2;
+		-moz-column-count: 2;
+		column-fill: auto;
+	  }
+	  }
+	
+	  @page {
+	  @top-left {
+		   content: "Internet-Draft"; 
+	  } 
+	  @top-right {
+		   content: "December 2010"; 
+	  } 
+	  @top-center {
+		   content: "Abbreviated Title";
+	  } 
+	  @bottom-left {
+		   content: "Doe"; 
+	  } 
+	  @bottom-center {
+		   content: "Expires June 2011"; 
+	  } 
+	  @bottom-right {
+		   content: "[Page " counter(page) "]"; 
+	  } 
+	  }
+	
+	  @page:first { 
+		@top-left {
+		  content: normal;
+		}
+		@top-right {
+		  content: normal;
+		}
+		@top-center {
+		  content: normal;
+		}
+	  }
+  /*]]>*/
+  </style>
+
+  <link href="#rfc.toc" rel="Contents">
+<link href="#rfc.section.1" rel="Chapter" title="1 Introduction">
+<link href="#rfc.section.2" rel="Chapter" title="2 Randomized Response Mechanisms">
+<link href="#rfc.section.3" rel="Chapter" title="3 Application to Spin Bit">
+<link href="#rfc.section.3.1" rel="Chapter" title="3.1 RRM at reflection/inversion">
+<link href="#rfc.section.3.2" rel="Chapter" title="3.2 RRM at each bit">
+<link href="#rfc.section.4" rel="Chapter" title="4 Conclusion">
+<link href="#rfc.references" rel="Chapter" title="5 Informative References">
+<link href="#rfc.authors" rel="Chapter">
+
+
+  <meta name="generator" content="xml2rfc version 2.9.9 - https://tools.ietf.org/tools/xml2rfc" />
+  <link rel="schema.dct" href="http://purl.org/dc/terms/" />
+
+  <meta name="dct.creator" content="Andersdotter, A. and S. Sahib" />
+  <meta name="dct.identifier" content="urn:ietf:id:draft-andersdotter-rrm-for-rrt-in-http3-00" />
+  <meta name="dct.issued" scheme="ISO8601" content="2019-10-14" />
+  <meta name="dct.abstract" content="This draft summarizes the results of an inquiry into the potential of using randomized response mechanism (RRM) to preserve privacy in round-trip time (RTT) measurements in HTTP3. It concludes that RRM is not a feasible mechanism for privacy preservation for such measurements." />
+  <meta name="description" content="This draft summarizes the results of an inquiry into the potential of using randomized response mechanism (RRM) to preserve privacy in round-trip time (RTT) measurements in HTTP3. It concludes that RRM is not a feasible mechanism for privacy preservation for such measurements." />
+
+</head>
+
+<body>
+
+  <table class="header">
+    <tbody>
+    
+    	<tr>
+<td class="left">Network Working Group</td>
+<td class="right">A. Andersdotter</td>
+</tr>
+<tr>
+<td class="left">Internet-Draft</td>
+<td class="right">ARTICLE 19</td>
+</tr>
+<tr>
+<td class="left">Intended status: Informational</td>
+<td class="right">S. Sahib</td>
+</tr>
+<tr>
+<td class="left">Expires: April 16, 2020</td>
+<td class="right">Salesforce</td>
+</tr>
+<tr>
+<td class="left"></td>
+<td class="right">October 14, 2019</td>
+</tr>
+
+    	
+    </tbody>
+  </table>
+
+  <p class="title">Randomized Response Mechanisms in RRT Measurements for HTTP/3<br />
+  <span class="filename">draft-andersdotter-rrm-for-rrt-in-http3-00</span></p>
+  
+  <h1 id="rfc.abstract"><a href="#rfc.abstract">Abstract</a></h1>
+<p>This draft summarizes the results of an inquiry into the potential of using randomized response mechanism (RRM) to preserve privacy in round-trip time (RTT) measurements in HTTP3. It concludes that RRM is not a feasible mechanism for privacy preservation for such measurements.</p>
+<h1 id="rfc.status"><a href="#rfc.status">Status of This Memo</a></h1>
+<p>This Internet-Draft is submitted in full conformance with the provisions of BCP 78 and BCP 79.</p>
+<p>Internet-Drafts are working documents of the Internet Engineering Task Force (IETF).  Note that other groups may also distribute working documents as Internet-Drafts.  The list of current Internet-Drafts is at https://datatracker.ietf.org/drafts/current/.</p>
+<p>Internet-Drafts are draft documents valid for a maximum of six months and may be updated, replaced, or obsoleted by other documents at any time.  It is inappropriate to use Internet-Drafts as reference material or to cite them other than as "work in progress."</p>
+<p>This Internet-Draft will expire on April 16, 2020.</p>
+<h1 id="rfc.copyrightnotice"><a href="#rfc.copyrightnotice">Copyright Notice</a></h1>
+<p>Copyright (c) 2019 IETF Trust and the persons identified as the document authors.  All rights reserved.</p>
+<p>This document is subject to BCP 78 and the IETF Trust's Legal Provisions Relating to IETF Documents (https://trustee.ietf.org/license-info) in effect on the date of publication of this document.  Please review these documents carefully, as they describe your rights and restrictions with respect to this document.  Code Components extracted from this document must include Simplified BSD License text as described in Section 4.e of the Trust Legal Provisions and are provided without warranty as described in the Simplified BSD License.</p>
+
+  
+  <hr class="noprint" />
+  <h1 class="np" id="rfc.toc"><a href="#rfc.toc">Table of Contents</a></h1>
+  <ul class="toc">
+
+  	<li>1.   <a href="#rfc.section.1">Introduction</a>
+</li>
+<li>2.   <a href="#rfc.section.2">Randomized Response Mechanisms</a>
+</li>
+<li>3.   <a href="#rfc.section.3">Application to Spin Bit</a>
+</li>
+<ul><li>3.1.   <a href="#rfc.section.3.1">RRM at reflection/inversion</a>
+</li>
+<li>3.2.   <a href="#rfc.section.3.2">RRM at each bit</a>
+</li>
+</ul><li>4.   <a href="#rfc.section.4">Conclusion</a>
+</li>
+<li>5.   <a href="#rfc.references">Informative References</a>
+</li>
+<li><a href="#rfc.authors">Authors' Addresses</a>
+</li>
+
+
+  </ul>
+
+  <h1 id="rfc.section.1">
+<a href="#rfc.section.1">1.</a> <a href="#introduction" id="introduction">Introduction</a>
+</h1>
+<p id="rfc.section.1.p.1">At the IETF104 convening of the Privacy Enhancements and (PEA) Research Group, a presentation on Differential Privacy (<a href="#AA-CL" class="xref">[AA-CL]</a>) gave rise to the idea of trying to apply Randomized Response methods to the QUIC Spin Bit described in <a href="#TRAMMEL" class="xref">[TRAMMEL]</a> and <a href="#KUEHLEWIND" class="xref">[KUEHLEWIND]</a>. The QUIC Spin Bit had generated controversy from a privacy perspective, both in the Working Group meetings and on e-mailing lists and been re-ignited through the publication of a subsequent Human Rights Consideration in <a href="#TENOEVER-MARTINI" class="xref">[TENOEVER-MARTINI]</a>.  </p>
+<p id="rfc.section.1.p.2">Randomized response trials were originally created for binary environments: if a series of measurements has only two possible outcomes (0 or 1, yes or no, true or false, for instance), it is the idea that allowing individual respondents to answer "falsely" at a predictable rate will still preserve the ability to make inferences on the entire set of respondents. The Spin Bit, being a bit, is binary outcome variable. Each time it is measured, the idea is that it can either "truthfully" report its value as what it should be according to <a href="#TRAMMEL" class="xref">[TRAMMEL]</a>, or it could, at some known rate or probability, report the opposite value.</p>
+<h1 id="rfc.section.2">
+<a href="#rfc.section.2">2.</a> <a href="#rrt" id="rrt">Randomized Response Mechanisms</a>
+</h1>
+<p id="rfc.section.2.p.1">Randomized Response Mechanisms (RRM) rely on the ability to make sense of data with known errors and were originally developed to facilitate surveys on sensitive topics such as alcohol or drug abuse, or political affiliation. The design allows a survey taker to provide, with some known probability P, a "false" answer ("yes" instead of "no", for example) to a survey question. It is meant to encourage truthful answers even in surveys where participants may otherwise feel compelled to give false answers.</p>
+<p id="rfc.section.2.p.2">RRMs are most easily illustrated for binary response problems. Let's take as an example "Did you go to the last IETF meeting?" The answer to this question is either yes or no. If 30% of all responses are known to be false, we have four categories of responses: true yes, true no, false yes and false no. From these numbers we can calculate the proportion of recurring visitors to the IETF.</p>
+<p id="rfc.section.2.p.3">RRMs can also be applied to multiple choice questions. Estimation of true proportions becomes more difficult as the number of possible answers per question goes up. Further examples can be found in <a href="#DWORK" class="xref">[DWORK]</a> and <a href="#FOX" class="xref">[FOX]</a>.</p>
+<h1 id="rfc.section.3">
+<a href="#rfc.section.3">3.</a> <a href="#asb" id="asb">Application to Spin Bit</a>
+</h1>
+<p id="rfc.section.3.p.1">As described in <a href="#TRAMMEL" class="xref">[TRAMMEL]</a>, the Spin Bit is a mechanism for measuring round-trip-times (RTT) in the QUIC protocol. Its operation is captured by the following five images:</p>
+<p id="rfc.section.3.p.2">Initially, during connection establishment, no packets with a spin bit are in flight, as shown in <a href="#illus0" class="xref">Figure 1</a>.</p>
+<div id="rfc.figure.1"></div>
+<div id="illus0"></div>
+<pre>
++--------+   -  -  -  -  -   +--------+
+|        |     --------&gt;     |        |
+| Client |                   | Server |
+|        |     &lt;--------     |        |
++--------+   -  -  -  -  -   +--------+
+</pre>
+<p class="figure">Figure 1: Initial state, no spin bit between client and server</p>
+<p id="rfc.section.3.p.3">Either the server, the client, or both can begin sending packets with short headers after connection establishment, as shown in <a href="#illus1" class="xref">Figure 2</a>; here, no spin edges are yet in transit.</p>
+<div id="rfc.figure.2"></div>
+<div id="illus1"></div>
+<pre>
++--------+   0  0  -  -  -   +--------+
+|        |     --------&gt;     |        |
+| Client |                   | Server |
+|        |     &lt;--------     |        |
++--------+   -  -  0  0  0   +--------+
+</pre>
+<p class="figure">Figure 2: Client and server begin sending packets with spin 0</p>
+<p id="rfc.section.3.p.4">Once the server&#8217;s first 0-marked packet arrives at the client, the client sets its spin value to 1, and begins sending packets with the spin bit set, as shown in <a href="#illus2" class="xref">Figure 3</a>. The spin edge is now in transit toward the server.</p>
+<div id="rfc.figure.3"></div>
+<div id="illus2"></div>
+<pre>
++--------+   1  0  0  0  0   +--------+
+|        |     --------&gt;     |        |
+| Client |                   | Server |
+|        |     &lt;--------     |        |
++--------+   0  0  0  0  0   +--------+
+</pre>
+<p class="figure">Figure 3: The bit begins spinning</p>
+<p id="rfc.section.3.p.5">Five ticks later, this packet arrives at the server, which takes its spin value from it and reflects that value back on the next packet it sends, as shown in <a href="#illus3" class="xref">Figure 4</a>. The spin edge is now in transit toward the client.</p>
+<div id="rfc.figure.4"></div>
+<div id="illus3"></div>
+<pre>
++--------+   1  1  1  1  1   +--------+
+|        |     --------&gt;     |        |
+| Client |                   | Server |
+|        |     &lt;--------     |        |
++--------+   0  0  0  0  1   +--------+
+</pre>
+<p class="figure">Figure 4: Server reflects the spin edge</p>
+<p id="rfc.section.3.p.6">Five ticks later, the 1-marked packet arrives at the client, which inverts its spin value and sends the inverted value on the next packet it sends, as shown in <a href="#illus4" class="xref">Figure 5</a>.</p>
+<div id="rfc.figure.5"></div>
+<div id="illus4"></div>
+<pre>
+      obs. points  X  Y
++--------+   0  1  1  1  1   +--------+
+|        |     --------&gt;     |        |
+| Client |                   | Server |
+|        |     &lt;--------     |        |
++--------+   1  1  1  1  1   +--------+
+                      Y
+</pre>
+<p class="figure">Figure 5: Client inverts the spin edge</p>
+<p id="rfc.section.3.p.7">In each iteration of <a href="#illus3" class="xref">Figure 4</a>-<a href="#illus4" class="xref">Figure 5</a> the a sequence of 0s or 1s the length of which is k0 for iteration 0, k1 for iteration 1, and so forth, can be measured (by X or Y in the picture). The length of each sequence equals the amount of ticks required to pass from the client back to the client. After n iterations, an average can be taken of the measurements (k0, ..., kn). This average can be multiplied by the amount of time per tick (a quantity which is assumed to be known) to get a value for the round-trip time (RTT).</p>
+<p id="rfc.section.3.p.8">Applying randomized response mechanisms (RRMs) would boil down to perturbing the measurements (k0, ..., kn). Such perturbation could happen in different ways.</p>
+<p id="rfc.section.3.p.9">RRMs could be applied so that that each bit transmitted from the client and the server has a probability P of being the "wrong" value. It could also be applied so that the reflections/inversions described in <a href="#illus3" class="xref">Figure 4</a>-<a href="#illus4" class="xref">Figure 5</a> do not occur with probability Q. The server or the client could be assumed to always behave as described in <a href="#illus3" class="xref">Figure 4</a>-<a href="#illus4" class="xref">Figure 5</a> with no RRM. Different probabilities could be applied to the server and client, respectively, transmitting a "wrong" value or delaying a reflection.</p>
+<h1 id="rfc.section.3.1">
+<a href="#rfc.section.3.1">3.1.</a> <a href="#reflection" id="reflection">RRM at reflection/inversion</a>
+</h1>
+<p id="rfc.section.3.1.p.1">The omission of a reflection or inversion would create difficulties. Namely, let's say the client omits the inversion in <a href="#illus4" class="xref">Figure 5</a>. Now there is no longer a spin edge so there is nothing to activate future reflections/inversions.</p>
+<p id="rfc.section.3.1.p.2">A possible work-around is having an additional bit to indicate a spin edge, assigned by the server to the bit which is (not) reflected in <a href="#illus3" class="xref">Figure 4</a>, or by the client to the bit which is (not) inverted in <a href="#illus4" class="xref">Figure 5</a>. In this case there would not be a point in applying RRM since the placement of the spin edge would no longer be obfuscated. The omission of a reflection/inversion would be defeated by the presence of an alternate identifier.</p>
+<p id="rfc.section.3.1.p.3">Another possible work-around is to do random re-sets of the spin bit, i.e., starting the process fresh from <a href="#illus1" class="xref">Figure 2</a>. Observers X and Y in <a href="#illus4" class="xref">Figure 5</a> would then get a series of measurements (k0, ..., kn), some of which were far too large, but would, over time, be able to deduce RTT from the smaller measurements. The expected proportion of large and small measurements in the whole set of measurements could be determined from the probabilities that a reflection/inversion does not happen and the probability that the spin bit is re-initiated.</p>
+<h1 id="rfc.section.3.2">
+<a href="#rfc.section.3.2">3.2.</a> <a href="#eachbit" id="eachbit">RRM at each bit</a>
+</h1>
+<p id="rfc.section.3.2.p.1">Let's say any bit transmitted from either the client or the server is "off" in relation to what it proposed in the Spin Bit model with some probability P. If P -&gt; 0.5, the spinning bits will come across as a random 0s and 1s and it will be difficult to estimate any edge. However, if P is less than 0.5, the spin edge can be estimated for instance by computing an average number of 0s or 1s in the past m ticks. For all averages above some cut-off rate, a measurement counter could be incremented by one. Eventually one would end up with a series (k'0, ..., k'n) that roughly corresponds to (k0, ..., kn) above.</p>
+<h1 id="rfc.section.4">
+<a href="#rfc.section.4">4.</a> <a href="#conclusion" id="conclusion">Conclusion</a>
+</h1>
+<p id="rfc.section.4.p.1">The spin bit is associated with an IP address which creates linkability (see <a href="#RFC6973" class="xref">[RFC6973]</a> and <a href="#RFC8280" class="xref">[RFC8280]</a>). The privacy concern associated with a spin bit is, additionally, that latency measurements will enable inferrence of the location or distance of the device associated with that particular IP address.</p>
+<p id="rfc.section.4.p.2">Randomized response mechanisms (RRM) would either cause the utility of the spin bit to disappear entirely (by rendering any measurement futile) or preserver the primary privacy-reducing inferrence, as long as a sufficiently large amount sequential measurements were done. Each measurement would continue to be tied to fixed identifier, which necessarily implies privacy loss.</p>
+<p id="rfc.section.4.p.3">For this reason, it is not clear that RRM would ultimately bring any particular privacy benefit beyond what is already guaranteed in the present proposal.</p>
+<h1 id="rfc.references">
+<a href="#rfc.references">5.</a> Informative References</h1>
+<table><tbody>
+<tr>
+<td class="reference"><b id="AA-CL">[AA-CL]</b></td>
+<td class="top">
+<a>Andersdotter, A.</a> and <a>C. L&#229;ngstr&#246;m</a>, "<a href="https://datatracker.ietf.org/meeting/104/materials/slides-104-pearg-amelia-christoffer-differential-privacy-00">Differential Privacy (PEARG, IETF104)</a>", March 2019.</td>
+</tr>
+<tr>
+<td class="reference"><b id="DWORK">[DWORK]</b></td>
+<td class="top">
+<a>Roth, A.</a> and <a>C. Dwork</a>, "<a href="https://www.cis.upenn.edu/~aaroth/Papers/privacybook.pdf">The Algorithmic Foundations of Differential Privacy</a>", 2014.</td>
+</tr>
+<tr>
+<td class="reference"><b id="FOX">[FOX]</b></td>
+<td class="top">
+<a>Fox, J.</a>, "<a>Randomized Response and Related Methods: Surveying Sensitive Data</a>", February 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="KUEHLEWIND">[KUEHLEWIND]</b></td>
+<td class="top">
+<a>Kuehlewind, M.</a> and <a>B. Trammel</a>, "<a href="https://tools.ietf.org/html/draft-ietf-quic-spin-exp-01">The QUIC Latency Spin Bit (draft-ietf-quic-spin-exp-01)</a>", October 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC6973">[RFC6973]</b></td>
+<td class="top">
+<a>Cooper, A.</a>, <a>Tschofenig, H.</a>, <a>Aboba, B.</a>, <a>Petersen, J.</a>, <a>Morris, J.</a>, <a>Hansen, M.</a> and <a>R. Smith</a>, "<a href="https://tools.ietf.org/html/rfc6973">Privacy Considerations for Internet Protocols</a>", RFC 6973, DOI 10.17487/RFC6973, July 2013.</td>
+</tr>
+<tr>
+<td class="reference"><b id="RFC8280">[RFC8280]</b></td>
+<td class="top">
+<a>Ten Oever, N.</a> and <a>C. Cath</a>, "<a href="https://tools.ietf.org/html/rfc8280">Human Rights Considerations for Internet Protocols</a>", RFC 8280, DOI 10.17487/RFC8280, October 2017.</td>
+</tr>
+<tr>
+<td class="reference"><b id="TENOEVER-MARTINI">[TENOEVER-MARTINI]</b></td>
+<td class="top">
+<a>Martini, B.</a> and <a>N. Ten Oever</a>, "<a href="https://tools.ietf.org/html/draft-martini-hrpc-quichr-00">QUIC Human Rights Review (draft-martini-hrpc-quichr-00)</a>", October 2018.</td>
+</tr>
+<tr>
+<td class="reference"><b id="TRAMMEL">[TRAMMEL]</b></td>
+<td class="top">
+<a>Trammel, B.</a>, <a>Boucadair, M.</a>, <a>Even, R.</a>, <a>Fioccola, G.</a>, <a>Fossati, T.</a>, <a>Ihlar, M.</a>, <a>Morton, A.</a> and <a>E. Stephan</a>, "<a href="https://www.ietf.org/archive/id/draft-trammell-quic-spin-03.txt">Adding Explicit Passive Measurability of Two-Way Latency to the QUIC Transport Protocol (draft-trammell-quic-spin-03)</a>", May 2018.</td>
+</tr>
+</tbody></table>
+<h1 id="rfc.authors"><a href="#rfc.authors">Authors' Addresses</a></h1>
+<div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Amelia Andersdotter</span> 
+	  <span class="n hidden">
+		<span class="family-name">Andersdotter</span>
+	  </span>
+	</span>
+	<span class="org vcardline">ARTICLE 19</span>
+	<span class="adr">
+	  <span class="vcardline">Free Word Centre, 60 Farringdon Road</span>
+
+	  <span class="vcardline">
+		<span class="locality">London EC1R 3GA</span>,  
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline">United Kingdom</span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:amelia@article19.org">amelia@article19.org</a></span>
+
+  </address>
+</div><div class="avoidbreak">
+  <address class="vcard">
+	<span class="vcardline">
+	  <span class="fn">Shivan Sahib</span> 
+	  <span class="n hidden">
+		<span class="family-name">Sahib</span>
+	  </span>
+	</span>
+	<span class="org vcardline">Salesforce</span>
+	<span class="adr">
+	  
+	  <span class="vcardline">
+		<span class="locality"></span> 
+		<span class="region"></span>
+		<span class="code"></span>
+	  </span>
+	  <span class="country-name vcardline"></span>
+	</span>
+	<span class="vcardline">EMail: <a href="mailto:shivankaulsahib@gmail.com">shivankaulsahib@gmail.com</a></span>
+
+  </address>
+</div>
+
+</body>
+</html>
