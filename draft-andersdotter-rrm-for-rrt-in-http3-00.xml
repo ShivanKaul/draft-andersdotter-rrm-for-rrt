@@ -147,6 +147,24 @@ in <xref target="illus4"/>.</t>
 
   <t>Another possible work-around is to do random re-sets of the spin bit, i.e., starting the process fresh from <xref target="illus1" />. Observers X and Y in <xref target="illus4" /> would then get a series of measurements (k0, ..., kn), some of which were far too large, but would, over time, be able to deduce RTT from the smaller measurements. The expected proportion of large and small measurements in the whole set of measurements could be determined from the probabilities that a reflection/inversion does not happen and the probability that the spin bit is re-initiated.</t>
   
+<section anchor="example1" title="Sample calculation">
+<t>The bit starts spinning with value v=0 at t=0. At the point of reflection, it does not reflect with probability P. At the point of inversion, it does not invert with probability Q.</t> 
+
+	<t>That gives four possible outcomes after one "lap":</t>
+	
+	<t>1. With probability P(1-Q) the client will continue transmitting v=0 and there will no longer be a clear spin edge.</t>
+	
+	<t>2. With probability (1-P)Q the client will continue transmitting v=0 and there will no longer be a clear spin edge.</t>
+	
+	<t>3. With probability (1-P)(1-Q) the first rotation of the spin bit will be such a measurement as is foreseen by the specification.</t>
+	
+	<t>4. With probability PQ the the first and a half rotation of the spin bit will be such a measurement as is foreseen by the specification (taking the server as a base-line rather than the client).</t>
+	
+	<t>The only way of minimizing the risk of eliminating the spin edge is by setting P=Q=1/2, but this would imply that half of the time the spin bit is no longer able to serve its purpose.</t>
+	
+	<t>Introducing the probability R of a random re-set of the spin bit at every m:th bit transmission can remedy this problem.</t>
+</section>
+	
 </section>
 
 <section anchor="eachbit" title="RRM at each bit">
