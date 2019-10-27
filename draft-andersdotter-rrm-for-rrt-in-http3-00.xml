@@ -40,7 +40,7 @@
 
     <abstract>
 
-<t>This draft summarizes the results of an inquiry into the potential of using randomized response mechanism (RRM) to preserve privacy in round-trip time (RTT) measurements in HTTP3. It concludes that RRM is not a feasible mechanism for privacy preservation for such measurements.</t>
+<t>This is a change. This draft summarizes the results of an inquiry into the potential of using randomized response mechanism (RRM) to preserve privacy in round-trip time (RTT) measurements in HTTP3. It concludes that RRM is not a feasible mechanism for privacy preservation for such measurements.</t>
 
     </abstract>
 
