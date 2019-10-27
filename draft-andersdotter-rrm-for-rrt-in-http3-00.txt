@@ -67,10 +67,11 @@ Table of Contents
    2.  Randomized Response Mechanisms  . . . . . . . . . . . . . . .   2
    3.  Application to Spin Bit . . . . . . . . . . . . . . . . . . .   3
      3.1.  RRM at reflection/inversion . . . . . . . . . . . . . . .   5
-     3.2.  RRM at each bit . . . . . . . . . . . . . . . . . . . . .   5
+       3.1.1.  Sample calculation  . . . . . . . . . . . . . . . . .   5
+     3.2.  RRM at each bit . . . . . . . . . . . . . . . . . . . . .   6
    4.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-   5.  Informative References  . . . . . . . . . . . . . . . . . . .   6
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
+   5.  Informative References  . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
@@ -104,7 +105,6 @@ Table of Contents
    instead of "no", for example) to a survey question.  It is meant to
    encourage truthful answers even in surveys where participants may
    otherwise feel compelled to give false answers.
-
 
 
 
@@ -259,6 +259,43 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    determined from the probabilities that a reflection/inversion does
    not happen and the probability that the spin bit is re-initiated.
 
+3.1.1.  Sample calculation
+
+   The bit starts spinning with value v=0 at t=0.  At the point of
+   reflection, it does not reflect with probability P.  At the point of
+   inversion, it does not invert with probability Q.
+
+   That gives four possible outcomes after one "lap":
+
+   1.  With probability P(1-Q) the client will continue transmitting v=0
+   and there will no longer be a clear spin edge.
+
+   2.  With probability (1-P)Q the client will continue transmitting v=0
+   and there will no longer be a clear spin edge.
+
+
+
+
+
+Andersdotter & Sahib     Expires April 16, 2020                 [Page 5]
+
+Internet-Draft            rrm-for-rrt-in-http3              October 2019
+
+
+   3.  With probability (1-P)(1-Q) the first rotation of the spin bit
+   will be such a measurement as is foreseen by the specification.
+
+   4.  With probability PQ the the first and a half rotation of the spin
+   bit will be such a measurement as is foreseen by the specification
+   (taking the server as a base-line rather than the client).
+
+   The only way of minimizing the risk of eliminating the spin edge is
+   by setting P=Q=1/2, but this would imply that half of the time the
+   spin bit is no longer able to serve its purpose.
+
+   Introducing the probability R of a random re-set of the spin bit at
+   every m:th bit transmission can remedy this problem.
+
 3.2.  RRM at each bit
 
    Let's say any bit transmitted from either the client or the server is
@@ -271,16 +308,6 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    counter could be incremented by one.  Eventually one would end up
    with a series (k'0, ..., k'n) that roughly corresponds to (k0, ...,
    kn) above.
-
-
-
-
-
-
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 5]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
 
 4.  Conclusion
 
@@ -300,6 +327,16 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    For this reason, it is not clear that RRM would ultimately bring any
    particular privacy benefit beyond what is already guaranteed in the
    present proposal.
+
+
+
+
+
+
+Andersdotter & Sahib     Expires April 16, 2020                 [Page 6]
+
+Internet-Draft            rrm-for-rrt-in-http3              October 2019
+
 
 5.  Informative References
 
@@ -328,16 +365,6 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
               DOI 10.17487/RFC6973, July 2013,
               <https://www.rfc-editor.org/info/rfc6973>.
 
-
-
-
-
-
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 6]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
-
    [RFC8280]  Ten Oever, N. and C. Cath, "Human Rights Considerations
               for Internet Protocols", RFC 8280, DOI 10.17487/RFC8280,
               October 2017, <https://www.rfc-editor.org/info/rfc8280>.
@@ -354,6 +381,18 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
               to the QUIC Transport Protocol (draft-trammell-quic-spin-
               03)", May 2018, <https://www.ietf.org/archive/id/
               draft-trammell-quic-spin-03.txt>.
+
+
+
+
+
+
+
+
+Andersdotter & Sahib     Expires April 16, 2020                 [Page 7]
+
+Internet-Draft            rrm-for-rrt-in-http3              October 2019
+
 
 Authors' Addresses
 
@@ -389,4 +428,21 @@ Authors' Addresses
 
 
 
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 7]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Andersdotter & Sahib     Expires April 16, 2020                 [Page 8]

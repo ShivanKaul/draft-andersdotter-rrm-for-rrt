@@ -40,7 +40,7 @@
 
     <abstract>
 
-<t>This is a change. This draft summarizes the results of an inquiry into the potential of using randomized response mechanism (RRM) to preserve privacy in round-trip time (RTT) measurements in HTTP3. It concludes that RRM is not a feasible mechanism for privacy preservation for such measurements.</t>
+<t>This draft summarizes the results of an inquiry into the potential of using randomized response mechanism (RRM) to preserve privacy in round-trip time (RTT) measurements in HTTP3. It concludes that RRM is not a feasible mechanism for privacy preservation for such measurements.</t>
 
     </abstract>
 
@@ -147,7 +147,8 @@ in <xref target="illus4"/>.</t>
 
   <t>Another possible work-around is to do random re-sets of the spin bit, i.e., starting the process fresh from <xref target="illus1" />. Observers X and Y in <xref target="illus4" /> would then get a series of measurements (k0, ..., kn), some of which were far too large, but would, over time, be able to deduce RTT from the smaller measurements. The expected proportion of large and small measurements in the whole set of measurements could be determined from the probabilities that a reflection/inversion does not happen and the probability that the spin bit is re-initiated.</t>
   
-<section anchor="example1" title="Sample calculation">
+  <section anchor="example1" title="Sample calculation">
+    
 <t>The bit starts spinning with value v=0 at t=0. At the point of reflection, it does not reflect with probability P. At the point of inversion, it does not invert with probability Q.</t> 
 
 	<t>That gives four possible outcomes after one "lap":</t>

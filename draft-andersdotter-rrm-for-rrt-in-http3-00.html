@@ -378,13 +378,14 @@
 <link href="#rfc.section.2" rel="Chapter" title="2 Randomized Response Mechanisms">
 <link href="#rfc.section.3" rel="Chapter" title="3 Application to Spin Bit">
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 RRM at reflection/inversion">
+<link href="#rfc.section.3.1.1" rel="Chapter" title="3.1.1 Sample calculation">
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 RRM at each bit">
 <link href="#rfc.section.4" rel="Chapter" title="4 Conclusion">
 <link href="#rfc.references" rel="Chapter" title="5 Informative References">
 <link href="#rfc.authors" rel="Chapter">
 
 
-  <meta name="generator" content="xml2rfc version 2.9.9 - https://tools.ietf.org/tools/xml2rfc" />
+  <meta name="generator" content="xml2rfc version 2.24.0 - https://tools.ietf.org/tools/xml2rfc" />
   <link rel="schema.dct" href="http://purl.org/dc/terms/" />
 
   <meta name="dct.creator" content="Andersdotter, A. and S. Sahib" />
@@ -452,7 +453,9 @@
 </li>
 <ul><li>3.1.   <a href="#rfc.section.3.1">RRM at reflection/inversion</a>
 </li>
-<li>3.2.   <a href="#rfc.section.3.2">RRM at each bit</a>
+<ul><li>3.1.1.   <a href="#rfc.section.3.1.1">Sample calculation</a>
+</li>
+</ul><li>3.2.   <a href="#rfc.section.3.2">RRM at each bit</a>
 </li>
 </ul><li>4.   <a href="#rfc.section.4">Conclusion</a>
 </li>
@@ -545,6 +548,17 @@
 <p id="rfc.section.3.1.p.1">The omission of a reflection or inversion would create difficulties. Namely, let's say the client omits the inversion in <a href="#illus4" class="xref">Figure 5</a>. Now there is no longer a spin edge so there is nothing to activate future reflections/inversions.</p>
 <p id="rfc.section.3.1.p.2">A possible work-around is having an additional bit to indicate a spin edge, assigned by the server to the bit which is (not) reflected in <a href="#illus3" class="xref">Figure 4</a>, or by the client to the bit which is (not) inverted in <a href="#illus4" class="xref">Figure 5</a>. In this case there would not be a point in applying RRM since the placement of the spin edge would no longer be obfuscated. The omission of a reflection/inversion would be defeated by the presence of an alternate identifier.</p>
 <p id="rfc.section.3.1.p.3">Another possible work-around is to do random re-sets of the spin bit, i.e., starting the process fresh from <a href="#illus1" class="xref">Figure 2</a>. Observers X and Y in <a href="#illus4" class="xref">Figure 5</a> would then get a series of measurements (k0, ..., kn), some of which were far too large, but would, over time, be able to deduce RTT from the smaller measurements. The expected proportion of large and small measurements in the whole set of measurements could be determined from the probabilities that a reflection/inversion does not happen and the probability that the spin bit is re-initiated.</p>
+<h1 id="rfc.section.3.1.1">
+<a href="#rfc.section.3.1.1">3.1.1.</a> <a href="#example1" id="example1">Sample calculation</a>
+</h1>
+<p id="rfc.section.3.1.1.p.1">The bit starts spinning with value v=0 at t=0. At the point of reflection, it does not reflect with probability P. At the point of inversion, it does not invert with probability Q.</p>
+<p id="rfc.section.3.1.1.p.2">That gives four possible outcomes after one "lap":</p>
+<p id="rfc.section.3.1.1.p.3">1. With probability P(1-Q) the client will continue transmitting v=0 and there will no longer be a clear spin edge.</p>
+<p id="rfc.section.3.1.1.p.4">2. With probability (1-P)Q the client will continue transmitting v=0 and there will no longer be a clear spin edge.</p>
+<p id="rfc.section.3.1.1.p.5">3. With probability (1-P)(1-Q) the first rotation of the spin bit will be such a measurement as is foreseen by the specification.</p>
+<p id="rfc.section.3.1.1.p.6">4. With probability PQ the the first and a half rotation of the spin bit will be such a measurement as is foreseen by the specification (taking the server as a base-line rather than the client).</p>
+<p id="rfc.section.3.1.1.p.7">The only way of minimizing the risk of eliminating the spin edge is by setting P=Q=1/2, but this would imply that half of the time the spin bit is no longer able to serve its purpose.</p>
+<p id="rfc.section.3.1.1.p.8">Introducing the probability R of a random re-set of the spin bit at every m:th bit transmission can remedy this problem.</p>
 <h1 id="rfc.section.3.2">
 <a href="#rfc.section.3.2">3.2.</a> <a href="#eachbit" id="eachbit">RRM at each bit</a>
 </h1>
