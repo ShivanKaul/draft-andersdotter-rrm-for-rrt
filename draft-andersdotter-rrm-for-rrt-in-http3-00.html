@@ -378,8 +378,9 @@
 <link href="#rfc.section.2" rel="Chapter" title="2 Randomized Response Mechanisms">
 <link href="#rfc.section.3" rel="Chapter" title="3 Application to Spin Bit">
 <link href="#rfc.section.3.1" rel="Chapter" title="3.1 RRM at reflection/inversion">
-<link href="#rfc.section.3.1.1" rel="Chapter" title="3.1.1 Sample calculation">
+<link href="#rfc.section.3.1.1" rel="Chapter" title="3.1.1 Example">
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 RRM at each bit">
+<link href="#rfc.section.3.2.1" rel="Chapter" title="3.2.1 Example">
 <link href="#rfc.section.4" rel="Chapter" title="4 Conclusion">
 <link href="#rfc.references" rel="Chapter" title="5 Informative References">
 <link href="#rfc.authors" rel="Chapter">
@@ -453,11 +454,13 @@
 </li>
 <ul><li>3.1.   <a href="#rfc.section.3.1">RRM at reflection/inversion</a>
 </li>
-<ul><li>3.1.1.   <a href="#rfc.section.3.1.1">Sample calculation</a>
+<ul><li>3.1.1.   <a href="#rfc.section.3.1.1">Example</a>
 </li>
 </ul><li>3.2.   <a href="#rfc.section.3.2">RRM at each bit</a>
 </li>
-</ul><li>4.   <a href="#rfc.section.4">Conclusion</a>
+<ul><li>3.2.1.   <a href="#rfc.section.3.2.1">Example</a>
+</li>
+</ul></ul><li>4.   <a href="#rfc.section.4">Conclusion</a>
 </li>
 <li>5.   <a href="#rfc.references">Informative References</a>
 </li>
@@ -549,20 +552,26 @@
 <p id="rfc.section.3.1.p.2">A possible work-around is having an additional bit to indicate a spin edge, assigned by the server to the bit which is (not) reflected in <a href="#illus3" class="xref">Figure 4</a>, or by the client to the bit which is (not) inverted in <a href="#illus4" class="xref">Figure 5</a>. In this case there would not be a point in applying RRM since the placement of the spin edge would no longer be obfuscated. The omission of a reflection/inversion would be defeated by the presence of an alternate identifier.</p>
 <p id="rfc.section.3.1.p.3">Another possible work-around is to do random re-sets of the spin bit, i.e., starting the process fresh from <a href="#illus1" class="xref">Figure 2</a>. Observers X and Y in <a href="#illus4" class="xref">Figure 5</a> would then get a series of measurements (k0, ..., kn), some of which were far too large, but would, over time, be able to deduce RTT from the smaller measurements. The expected proportion of large and small measurements in the whole set of measurements could be determined from the probabilities that a reflection/inversion does not happen and the probability that the spin bit is re-initiated.</p>
 <h1 id="rfc.section.3.1.1">
-<a href="#rfc.section.3.1.1">3.1.1.</a> <a href="#example1" id="example1">Sample calculation</a>
+<a href="#rfc.section.3.1.1">3.1.1.</a> <a href="#example1" id="example1">Example</a>
 </h1>
 <p id="rfc.section.3.1.1.p.1">The bit starts spinning with value v=0 at t=0. At the point of reflection, it does not reflect with probability P. At the point of inversion, it does not invert with probability Q.</p>
 <p id="rfc.section.3.1.1.p.2">That gives four possible outcomes after one "lap":</p>
 <p id="rfc.section.3.1.1.p.3">1. With probability P(1-Q) the client will continue transmitting v=0 and there will no longer be a clear spin edge.</p>
 <p id="rfc.section.3.1.1.p.4">2. With probability (1-P)Q the client will continue transmitting v=0 and there will no longer be a clear spin edge.</p>
 <p id="rfc.section.3.1.1.p.5">3. With probability (1-P)(1-Q) the first rotation of the spin bit will be such a measurement as is foreseen by the specification.</p>
-<p id="rfc.section.3.1.1.p.6">4. With probability PQ the the first and a half rotation of the spin bit will be such a measurement as is foreseen by the specification (taking the server as a base-line rather than the client).</p>
+<p id="rfc.section.3.1.1.p.6">4. With probability PQ the the first and a half rotation of the spin bit will produce such a measurement as is foreseen by the specification (taking the server as a base-line rather than the client).</p>
 <p id="rfc.section.3.1.1.p.7">The only way of minimizing the risk of eliminating the spin edge is by setting P=Q=1/2, but this would imply that half of the time the spin bit is no longer able to serve its purpose.</p>
-<p id="rfc.section.3.1.1.p.8">Introducing the probability R of a random re-set of the spin bit at every m:th bit transmission can remedy this problem.</p>
+<p id="rfc.section.3.1.1.p.8">Introducing the probability R of a random re-set of the spin bit at every m:th bit transmission can remedy this problem. If R is close to 1 and m is reasonably big, a measuring device will pick up sequences of v=1 that can be used as a basis for measurement at time intervals depending on a multiple of m. In the case of a one-way observations, such as X in <a href="#illus4" class="xref">Figure 5</a>, there will eventually be full-length sequences of v=1 whose average will be as described above. In the case of a two-way observation, such as Y in <a href="#illus4" class="xref">Figure 5</a> , after each reset there will be a probability P(1-Q) that a half-sequence of v=1 will be detected at the bottom Y, and probability 1/2 that a full sequence will be detected at the top Y.</p>
 <h1 id="rfc.section.3.2">
 <a href="#rfc.section.3.2">3.2.</a> <a href="#eachbit" id="eachbit">RRM at each bit</a>
 </h1>
 <p id="rfc.section.3.2.p.1">Let's say any bit transmitted from either the client or the server is "off" in relation to what it proposed in the Spin Bit model with some probability P. If P -&gt; 0.5, the spinning bits will come across as a random 0s and 1s and it will be difficult to estimate any edge. However, if P is less than 0.5, the spin edge can be estimated for instance by computing an average number of 0s or 1s in the past m ticks. For all averages above some cut-off rate, a measurement counter could be incremented by one. Eventually one would end up with a series (k'0, ..., k'n) that roughly corresponds to (k0, ..., kn) above.</p>
+<h1 id="rfc.section.3.2.1">
+<a href="#rfc.section.3.2.1">3.2.1.</a> <a href="#example2" id="example2">Example</a>
+</h1>
+<p id="rfc.section.3.2.1.p.1">The bit spins in the foreseen way. Every time a bit is transmitted, there is a probability P that it holds a different value than it should. In <a href="#illus4" class="xref">Figure 5</a> , either measurements station X or both stations Y observe a passing bit, as well as bits passing before or after that bit (if any). After observing 2k+1 bits (b[-k], ..., b[0], ..., b[k]) the true value of bit b[0] is estimated, for instance based on whether the majority of b[i] were v=0 or v=1. The estimated value is then used to increment a sequence counter.</p>
+<p id="rfc.section.3.2.1.p.2">The estimator follows a binomial distribution (drawing with replacement), and the risk of misidentifying a bit is equal to the risk of having (k+1) v=1 bits in the 2k observations where b[0] "should" be attributed to v=0. This risk depends on P and k.</p>
+<p id="rfc.section.3.2.1.p.3">Setting k too large creates a risk of having estimator sequences that are longer than the round-trip time (RTT) to be measured. If P is reasonably small, estimation will still eventually be possible after a sufficient amount of measurements. One option is to keep P variable and determined by the client, introducing the possibility of choice in RTT measurements.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#conclusion" id="conclusion">Conclusion</a>
 </h1>
