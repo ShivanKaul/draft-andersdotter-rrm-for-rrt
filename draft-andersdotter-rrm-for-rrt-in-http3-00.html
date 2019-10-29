@@ -479,12 +479,12 @@
 <a href="#rfc.section.2">2.</a> <a href="#rrt" id="rrt">Randomized Response Mechanisms</a>
 </h1>
 <p id="rfc.section.2.p.1">Randomized Response Mechanisms (RRM) rely on the ability to make sense of data with known errors and were originally developed to facilitate surveys on sensitive topics such as alcohol or drug abuse, or political affiliation. The design allows a survey taker to provide, with some known probability P, a "false" answer ("yes" instead of "no", for example) to a survey question. It is meant to encourage truthful answers even in surveys where participants may otherwise feel compelled to give false answers.</p>
-<p id="rfc.section.2.p.2">RRMs are most easily illustrated for binary response problems. Let's take as an example "Did you go to the last IETF meeting?" The answer to this question is either yes or no. If 30% of all responses are known to be false, we have four categories of responses: true yes, true no, false yes and false no. From these numbers we can calculate the proportion of recurring visitors to the IETF.</p>
-<p id="rfc.section.2.p.3">RRMs can also be applied to multiple choice questions. Estimation of true proportions becomes more difficult as the number of possible answers per question goes up. Further examples can be found in <a href="#DWORK" class="xref">[DWORK]</a> and <a href="#FOX" class="xref">[FOX]</a>.</p>
+<p id="rfc.section.2.p.2">RRMs are most easily illustrated for binary response problems. Let's take as an example "Did you go to the last IETF meeting?" The answer to this question is either yes or no. If 30% of all responses are known to be false, we have four categories of responses: true yes, true no, false yes and false no. From these numbers we can estimate the proportion of recurring visitors to the IETF.</p>
+<p id="rfc.section.2.p.3">RRMs can also be applied to multiple choice questions. Estimation of true proportions becomes more difficult as the number of possible answers per question goes up. Further examples, including formulas and calculations, can be found in <a href="#DWORK" class="xref">[DWORK]</a> and <a href="#FOX" class="xref">[FOX]</a>.</p>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#asb" id="asb">Application to Spin Bit</a>
 </h1>
-<p id="rfc.section.3.p.1">As described in <a href="#TRAMMEL" class="xref">[TRAMMEL]</a>, the Spin Bit is a mechanism for measuring round-trip-times (RTT) in the QUIC protocol. Its operation is captured by the following five images:</p>
+<p id="rfc.section.3.p.1">As described in <a href="#TRAMMEL" class="xref">[TRAMMEL]</a>, the Spin Bit is a mechanism for measuring round-trip-times (RTT) in the QUIC protocol. Its operation is captured by the following five images, extracted from this draft:</p>
 <p id="rfc.section.3.p.2">Initially, during connection establishment, no packets with a spin bit are in flight, as shown in <a href="#illus0" class="xref">Figure 1</a>.</p>
 <div id="rfc.figure.1"></div>
 <div id="illus0"></div>

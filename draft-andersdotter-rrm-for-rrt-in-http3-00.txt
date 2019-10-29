@@ -118,19 +118,19 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    take as an example "Did you go to the last IETF meeting?"  The answer
    to this question is either yes or no.  If 30% of all responses are
    known to be false, we have four categories of responses: true yes,
-   true no, false yes and false no.  From these numbers we can calculate
+   true no, false yes and false no.  From these numbers we can estimate
    the proportion of recurring visitors to the IETF.
 
    RRMs can also be applied to multiple choice questions.  Estimation of
    true proportions becomes more difficult as the number of possible
-   answers per question goes up.  Further examples can be found in
-   [DWORK] and [FOX].
+   answers per question goes up.  Further examples, including formulas
+   and calculations, can be found in [DWORK] and [FOX].
 
 3.  Application to Spin Bit
 
    As described in [TRAMMEL], the Spin Bit is a mechanism for measuring
    round-trip-times (RTT) in the QUIC protocol.  Its operation is
-   captured by the following five images:
+   captured by the following five images, extracted from this draft:
 
    Initially, during connection establishment, no packets with a spin
    bit are in flight, as shown in Figure 1.
