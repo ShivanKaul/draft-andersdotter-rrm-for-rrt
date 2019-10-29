@@ -556,12 +556,16 @@
 </h1>
 <p id="rfc.section.3.1.1.p.1">The bit starts spinning with value v=0 at t=0. At the point of reflection, it does not reflect with probability P. At the point of inversion, it does not invert with probability Q.</p>
 <p id="rfc.section.3.1.1.p.2">That gives four possible outcomes after one "lap":</p>
-<p id="rfc.section.3.1.1.p.3">1. With probability P(1-Q) the client will continue transmitting v=0 and there will no longer be a clear spin edge.</p>
-<p id="rfc.section.3.1.1.p.4">2. With probability (1-P)Q the client will continue transmitting v=0 and there will no longer be a clear spin edge.</p>
-<p id="rfc.section.3.1.1.p.5">3. With probability (1-P)(1-Q) the first rotation of the spin bit will be such a measurement as is foreseen by the specification.</p>
-<p id="rfc.section.3.1.1.p.6">4. With probability PQ the the first and a half rotation of the spin bit will produce such a measurement as is foreseen by the specification (taking the server as a base-line rather than the client).</p>
-<p id="rfc.section.3.1.1.p.7">The only way of minimizing the risk of eliminating the spin edge is by setting P=Q=1/2, but this would imply that half of the time the spin bit is no longer able to serve its purpose.</p>
-<p id="rfc.section.3.1.1.p.8">Introducing the probability R of a random re-set of the spin bit at every m:th bit transmission can remedy this problem. If R is close to 1 and m is reasonably big, a measuring device will pick up sequences of v=1 that can be used as a basis for measurement at time intervals depending on a multiple of m. In the case of a one-way observations, such as X in <a href="#illus4" class="xref">Figure 5</a>, there will eventually be full-length sequences of v=1 whose average will be as described above. In the case of a two-way observation, such as Y in <a href="#illus4" class="xref">Figure 5</a> , after each reset there will be a probability P(1-Q) that a half-sequence of v=1 will be detected at the bottom Y, and probability 1/2 that a full sequence will be detected at the top Y.</p>
+<p></p>
+
+<ul class="empty">
+<li>1. With probability P(1-Q) the client will continue transmitting v=0 and there will no longer be a clear spin edge.</li>
+<li>2. With probability (1-P)Q the client will continue transmitting v=0 and there will no longer be a clear spin edge.</li>
+<li>3. With probability (1-P)(1-Q) the first rotation of the spin bit will be such a measurement as is foreseen by the specification.</li>
+<li>4. With probability PQ the the first and a half rotation of the spin bit will produce such a measurement as is foreseen by the specification (taking the server as a base-line rather than the client).</li>
+</ul>
+<p id="rfc.section.3.1.1.p.4">The only way of minimizing the risk of eliminating the spin edge is by setting P=Q=1/2, but this would imply that half of the time the spin bit is no longer able to serve its purpose.</p>
+<p id="rfc.section.3.1.1.p.5">Introducing the probability R of a random re-set of the spin bit at every m:th bit transmission can remedy this problem. If R is close to 1 and m is reasonably big, a measuring device will pick up sequences of v=1 that can be used as a basis for measurement at time intervals depending on a multiple of m. In the case of a one-way observations, such as X in <a href="#illus4" class="xref">Figure 5</a>, there will eventually be full-length sequences of v=1 whose average will be as described above. In the case of a two-way observation, such as Y in <a href="#illus4" class="xref">Figure 5</a> , after each reset there will be a probability P(1-Q) that a half-sequence of v=1 will be detected at the bottom Y, and probability 1/2 that a full sequence will be detected at the top Y.</p>
 <h1 id="rfc.section.3.2">
 <a href="#rfc.section.3.2">3.2.</a> <a href="#eachbit" id="eachbit">RRM at each bit</a>
 </h1>

@@ -267,11 +267,11 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
    That gives four possible outcomes after one "lap":
 
-   1.  With probability P(1-Q) the client will continue transmitting v=0
-   and there will no longer be a clear spin edge.
+      1.  With probability P(1-Q) the client will continue transmitting
+      v=0 and there will no longer be a clear spin edge.
 
-   2.  With probability (1-P)Q the client will continue transmitting v=0
-   and there will no longer be a clear spin edge.
+      2.  With probability (1-P)Q the client will continue transmitting
+      v=0 and there will no longer be a clear spin edge.
 
 
 
@@ -282,13 +282,13 @@ Andersdotter & Sahib     Expires April 16, 2020                 [Page 5]
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
-   3.  With probability (1-P)(1-Q) the first rotation of the spin bit
-   will be such a measurement as is foreseen by the specification.
+      3.  With probability (1-P)(1-Q) the first rotation of the spin bit
+      will be such a measurement as is foreseen by the specification.
 
-   4.  With probability PQ the the first and a half rotation of the spin
-   bit will produce such a measurement as is foreseen by the
-   specification (taking the server as a base-line rather than the
-   client).
+      4.  With probability PQ the the first and a half rotation of the
+      spin bit will produce such a measurement as is foreseen by the
+      specification (taking the server as a base-line rather than the
+      client).
 
    The only way of minimizing the risk of eliminating the spin edge is
    by setting P=Q=1/2, but this would imply that half of the time the
