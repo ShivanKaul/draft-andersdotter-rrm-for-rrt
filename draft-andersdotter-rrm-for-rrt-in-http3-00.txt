@@ -5,8 +5,8 @@
 Internet Research Task Force                             A. Andersdotter
 Internet-Draft                                                ARTICLE 19
 Intended status: Informational                                  S. Sahib
-Expires: April 16, 2020                                       Salesforce
-                                                        October 14, 2019
+Expires: May 1, 2020                                          Salesforce
+                                                        October 29, 2019
 
 
      Randomized Response Mechanisms in RRT Measurements for HTTP/3
@@ -19,7 +19,7 @@ Abstract
    round-trip time (RTT) measurements in HTTP3.  It concludes that RRM
    could be used to introduce choice for web browser clients in
    preserving privacy in latency measurements, but that linkability
-   would remain a concern..
+   would remain a concern.
 
 Status of This Memo
 
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 16, 2020.
+   This Internet-Draft will expire on May 1, 2020.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 1]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 1]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 2]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 2]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
@@ -165,7 +165,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 3]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 3]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
@@ -221,7 +221,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 4]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 4]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
@@ -277,7 +277,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 5]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 5]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
@@ -333,7 +333,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 6]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 6]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
@@ -389,7 +389,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 7]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 7]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
@@ -445,4 +445,4 @@ Authors' Addresses
 
 
 
-Andersdotter & Sahib     Expires April 16, 2020                 [Page 8]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 8]

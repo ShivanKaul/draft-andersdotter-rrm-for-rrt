@@ -32,7 +32,7 @@
       </address>
     </author>
 
-    <date year="2019" month="October" day="14"/>
+    <date year="2019" month="October" day="29"/>
 
      <area>General</area>
 
@@ -46,7 +46,7 @@
 
     <abstract>
 
-<t>This draft summarizes the results of an inquiry into the potential of using randomized response mechanism (RRM) to preserve privacy in round-trip time (RTT) measurements in HTTP3. It concludes that RRM could be used to introduce choice for web browser clients in preserving privacy in latency measurements, but that linkability would remain a concern..</t>
+<t>This draft summarizes the results of an inquiry into the potential of using randomized response mechanism (RRM) to preserve privacy in round-trip time (RTT) measurements in HTTP3. It concludes that RRM could be used to introduce choice for web browser clients in preserving privacy in latency measurements, but that linkability would remain a concern.</t>
 
     </abstract>
 
