@@ -360,14 +360,17 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
    Randomized response mechanisms (RRM) would either cause the utility
    of the spin bit to disappear entirely (by rendering any measurement
-   futile) or preserver the primary privacy-reducing inferrence, as long
-   as a sufficiently large amount sequential measurements were done.
-   Each measurement would continue to be tied to fixed identifier, which
-   necessarily implies privacy loss.
+   futile) or cause the primary privacy-reducing inferrence to remain a
+   problem, as long as a sufficiently large amount sequential
+   measurements were done.  Each measurement would continue to be tied
+   to fixed identifier, which necessarily implies privacy loss.
 
    For this reason, it is not clear that RRM would ultimately bring any
    particular privacy benefit beyond what is already guaranteed in the
-   present proposal.
+   present proposal.  A possible option is to allow a client to set a
+   randomization value P in such a way that it could be close to 1/2, in
+   the case where each bit is always RRM-protected.  Then the client
+   would have the option of avoiding latency measurements entirely.
 
 5.  Informative References
 
@@ -382,9 +385,6 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
               <https://www.cis.upenn.edu/~aaroth/Papers/
               privacybook.pdf>.
 
-   [FOX]      Fox, J., "Randomized Response and Related Methods:
-              Surveying Sensitive Data", February 2017.
-
 
 
 
@@ -393,6 +393,9 @@ Andersdotter & Sahib     Expires April 16, 2020                 [Page 7]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
+
+   [FOX]      Fox, J., "Randomized Response and Related Methods:
+              Surveying Sensitive Data", February 2017.
 
    [KUEHLEWIND]
               Kuehlewind, M. and B. Trammel, "The QUIC Latency Spin Bit
@@ -437,9 +440,6 @@ Authors' Addresses
    Salesforce
 
    Email: shivankaulsahib@gmail.com
-
-
-
 
 
 

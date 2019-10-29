@@ -193,9 +193,9 @@ in <xref target="illus4"/>.</t>
 
   <t>The spin bit is associated with an IP address which creates linkability (see <xref target="RFC6973"/> and <xref target="RFC8280"/>). The privacy concern associated with a spin bit is, additionally, that latency measurements will enable inferrence of the location or distance of the device associated with that particular IP address.</t>
 
-  <t>Randomized response mechanisms (RRM) would either cause the utility of the spin bit to disappear entirely (by rendering any measurement futile) or preserver the primary privacy-reducing inferrence, as long as a sufficiently large amount sequential measurements were done. Each measurement would continue to be tied to fixed identifier, which necessarily implies privacy loss.</t>
+  <t>Randomized response mechanisms (RRM) would either cause the utility of the spin bit to disappear entirely (by rendering any measurement futile) or cause the primary privacy-reducing inferrence to remain a problem, as long as a sufficiently large amount sequential measurements were done. Each measurement would continue to be tied to fixed identifier, which necessarily implies privacy loss.</t>
 
-  <t>For this reason, it is not clear that RRM would ultimately bring any particular privacy benefit beyond what is already guaranteed in the present proposal.</t>
+  <t>For this reason, it is not clear that RRM would ultimately bring any particular privacy benefit beyond what is already guaranteed in the present proposal. A possible option is to allow a client to set a randomization value P in such a way that it could be close to 1/2, in the case where each bit is always RRM-protected. Then the client would have the option of avoiding latency measurements entirely.</t>
 
 </section>
 
