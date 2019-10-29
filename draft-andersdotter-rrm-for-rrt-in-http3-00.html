@@ -580,36 +580,52 @@
 <li>4. With probability PQ the the first and a half rotation of the spin bit will produce such a measurement as is foreseen by the specification. The result would as if a bit started spinning with v=0 at the server in <a href="#illus4" class="xref">Figure 5</a> and continued without inversion (i.e. remaining at v=0) into the future.</li>
 </ul>
 <p id="rfc.section.3.1.1.p.4">In two of these outcomes, the spin edge is eradicated. The probability of elimination is minimized by setting P=Q=1/2, but even this would imply that half of the time the spin bit is no longer able to serve its purpose.</p>
-<p id="rfc.section.3.1.1.p.5">We can represent this as a Markov transition matrix.</p>
+<p id="rfc.section.3.1.1.p.5">We can represent this as a Markov transition matrix, where Q' and P' will be used as short-hand for (1-Q) and (1-P). Define the following events:</p>
+<p></p>
+
+<ul class="empty">
+<li>A. The first bit in the k:th round-trip initiated by the client is v=1. It receives a correctly reflected bit from the server. The first bit in the (k+1):th round-trip as transmitted by the client is v=1, meaning that the client has omitted an inversion.</li>
+<li>B. The first bit in the k:th round-trip initiated by the client is v=0. It receives a correctly reflected bit from the server. The first bit in the (k+1):th round-trip as transmitted by the client is v=1, meaning that the client has correctly inverted.</li>
+<li>C. The first bit in the k:th round-trip initiated by the client is v=0. It receives a correctly reflected bit from the server. The first bit in the (k+1):th round-trip as transmitted by the client is v=0, meaning that the client has omitted an inversion.</li>
+<li>D. The first bit in the k:th round-trip initiated by the client is v=1. It receives a correctly reflected bit from the server. The first bit in the (k+1):th round-trip as transmitted by the client is v=0, meaning that the client has correctly inverted.</li>
+<li>E. The first bit in the k:th round-trip initiated by the client is v=1. It does not receive a reflected bit from the server. The first bit in the (k+1):th round-trip as transmitted by the client is v=1, meaning that the client has correctly inverted.</li>
+<li>F. The first bit in the k:th round-trip initiated by the client is v=1. It does not receive a reflected bit from the server. The first bit in the (k+1):th round-trip as transmitted by the client is v=0, meaning that the client has omitted an inversion.</li>
+<li>G. The first bit in the k:th round-trip initiated by the client is v=0. It does not receive a reflected bit from the server. The first bit in the (k+1):th round-trip as transmitted by the client is v=1, meaning that the client has omitted an inversion.</li>
+<li>H. The first bit in the k:th round-trip initiated by the client is v=0. It does not receive a reflected bit from the server. The first bit in the (k+1):th round-trip as transmitted by the client is v=0, meaning that the client has correctly inverted.</li>
+<li>I. The server receives does not receive a triggering event, meaning that two bits immediately following one another are always the same. The server does nothing.</li>
+<li>J. The client receives does not receive a triggering event, meaning that two bits immediately following one another are always the same. The client does nothing.</li>
+</ul>
 <div id="rfc.figure.6"></div>
 <div id="illus6"></div>
 <pre>
 
-+-------+-------+-------+-------+-------+
-        |Reflect|Invert |Reflect|Invert |
-        |true   |true   |false  |false  |
-        |value  |value  |value  | value |
-+-------+-------+-------+-------+-------+
-|Reflect|       |       |       |       |
-|true   |   0   | (1-P) |   0   | (1-P) |
-|value  |       |       |       |       |
-+-------+-------+-------+-------+-------+
-|Invert |       |       |       |       |
-|true   | (1-Q) |   0   | (1-Q) |   0   |
-|value  |       |       |       |       |
-+-------+-------+-------+-------+-------+
-|Reflect|       |       |       |       |
-|false  |   0   |   P   |   0   |   P   |
-|value  |       |       |       |       |
-+-------+-------+-------+-------+-------+
-|Invert |       |       |       |       |
-|false  |   Q   |  0    |   Q   |   0   |
-|value  |       |       |       |       |
-+-------+-------+-------+-------+-------+
++---+----+----+----+----+----+----+----+----+----+----+
+|   | A  | B  | C  | D  | E  | F  | G  | H  | I  | J  |
++---+----+----+----+----+----+----+----+----+----+----+
+| A | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  |Q'P | 0  |
++---+----+----+----+----+----+----+----+----+----+----+
+| B |P'Q'| 0  | 0  |P'Q'|P'Q'|P'Q'| 0  | 0  | 0  | 0  |
++---+----+----+----+----+----+----+----+----+----+----+
+| C | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  |Q'P | 0  |
++---+----+----+----+----+----+----+----+----+----+----+
+| D | 0  |P'Q'|P'Q'| 0  | 0  | 0  |P'Q'|P'Q'| 0  | 0  |
++---+----+----+----+----+----+----+----+----+----+----+
+| E | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  |QP' | 0  |
++---+----+----+----+----+----+----+----+----+----+----+
+| F | 0  | PQ | PQ | 0  | 0  | 0  | PQ | PQ | 0  | 0  |
++---+----+----+----+----+----+----+----+----+----+----+
+| G | PQ | 0  | 0  | PQ | PQ | PQ | 0  | 0  | 0  | 0  |
++---+----+----+----+----+----+----+----+----+----+----+
+| H | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | QP'| 0  |
++---+----+----+----+----+----+----+----+----+----+----+
+| I | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 1  |
++---+----+----+----+----+----+----+----+----+----+----+
+| J | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 1  | 0  |
++---+----+----+----+----+----+----+----+----+----+----+
 
 </pre>
-<p class="figure">Figure 6: RRM transition matrix with no reset and no edge identifying bit</p>
-<p id="rfc.section.3.1.1.p.6">test</p>
+<p class="figure">Figure 6: RRM transition matrix, no reset and no edge-id bit</p>
+<p id="rfc.section.3.1.1.p.7">test</p>
 <h1 id="rfc.section.3.1.2">
 <a href="#rfc.section.3.1.2">3.1.2.</a> <a href="#example2" id="example2">Analysis: Reset and no edge identifying bit</a>
 </h1>

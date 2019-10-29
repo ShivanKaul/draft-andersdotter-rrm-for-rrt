@@ -71,12 +71,12 @@ Table of Contents
    3.  Application to Spin Bit . . . . . . . . . . . . . . . . . . .   3
      3.1.  Case 1: RRM at reflection/inversion . . . . . . . . . . .   5
        3.1.1.  Analysis: No reset and no edge identifying bit  . . .   6
-       3.1.2.  Analysis: Reset and no edge identifying bit . . . . .   7
-     3.2.  RRM at each bit . . . . . . . . . . . . . . . . . . . . .   8
-       3.2.1.  Example . . . . . . . . . . . . . . . . . . . . . . .   8
-   4.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-   5.  Informative References  . . . . . . . . . . . . . . . . . . .   9
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
+       3.1.2.  Analysis: Reset and no edge identifying bit . . . . .   8
+     3.2.  RRM at each bit . . . . . . . . . . . . . . . . . . . . .   9
+       3.2.1.  Example . . . . . . . . . . . . . . . . . . . . . . .   9
+   4.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .  10
+   5.  Informative References  . . . . . . . . . . . . . . . . . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -341,34 +341,94 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    this would imply that half of the time the spin bit is no longer able
    to serve its purpose.
 
-   We can represent this as a Markov transition matrix.
+   We can represent this as a Markov transition matrix, where Q' and P'
+   will be used as short-hand for (1-Q) and (1-P).  Define the following
+   events:
+
+      A.  The first bit in the k:th round-trip initiated by the client
+      is v=1.  It receives a correctly reflected bit from the server.
+      The first bit in the (k+1):th round-trip as transmitted by the
+      client is v=1, meaning that the client has omitted an inversion.
+
+      B.  The first bit in the k:th round-trip initiated by the client
+      is v=0.  It receives a correctly reflected bit from the server.
+      The first bit in the (k+1):th round-trip as transmitted by the
+      client is v=1, meaning that the client has correctly inverted.
+
+      C.  The first bit in the k:th round-trip initiated by the client
+      is v=0.  It receives a correctly reflected bit from the server.
+      The first bit in the (k+1):th round-trip as transmitted by the
+      client is v=0, meaning that the client has omitted an inversion.
+
+      D.  The first bit in the k:th round-trip initiated by the client
+      is v=1.  It receives a correctly reflected bit from the server.
+      The first bit in the (k+1):th round-trip as transmitted by the
+      client is v=0, meaning that the client has correctly inverted.
+
+      E.  The first bit in the k:th round-trip initiated by the client
+      is v=1.  It does not receive a reflected bit from the server.  The
+      first bit in the (k+1):th round-trip as transmitted by the client
+      is v=1, meaning that the client has correctly inverted.
+
+      F.  The first bit in the k:th round-trip initiated by the client
+      is v=1.  It does not receive a reflected bit from the server.  The
+      first bit in the (k+1):th round-trip as transmitted by the client
+      is v=0, meaning that the client has omitted an inversion.
+
+      G.  The first bit in the k:th round-trip initiated by the client
+      is v=0.  It does not receive a reflected bit from the server.  The
+      first bit in the (k+1):th round-trip as transmitted by the client
+      is v=1, meaning that the client has omitted an inversion.
+
+      H.  The first bit in the k:th round-trip initiated by the client
+      is v=0.  It does not receive a reflected bit from the server.  The
+      first bit in the (k+1):th round-trip as transmitted by the client
+      is v=0, meaning that the client has correctly inverted.
 
 
-   +-------+-------+-------+-------+-------+
-           |Reflect|Invert |Reflect|Invert |
-           |true   |true   |false  |false  |
-           |value  |value  |value  | value |
-   +-------+-------+-------+-------+-------+
-   |Reflect|       |       |       |       |
-   |true   |   0   | (1-P) |   0   | (1-P) |
-   |value  |       |       |       |       |
-   +-------+-------+-------+-------+-------+
-   |Invert |       |       |       |       |
-   |true   | (1-Q) |   0   | (1-Q) |   0   |
-   |value  |       |       |       |       |
-   +-------+-------+-------+-------+-------+
-   |Reflect|       |       |       |       |
-   |false  |   0   |   P   |   0   |   P   |
-   |value  |       |       |       |       |
-   +-------+-------+-------+-------+-------+
-   |Invert |       |       |       |       |
-   |false  |   Q   |  0    |   Q   |   0   |
-   |value  |       |       |       |       |
-   +-------+-------+-------+-------+-------+
 
 
-   Figure 6: RRM transition matrix with no reset and no edge identifying
-                                    bit
+
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 7]
+
+Internet-Draft            rrm-for-rrt-in-http3              October 2019
+
+
+      I.  The server receives does not receive a triggering event,
+      meaning that two bits immediately following one another are always
+      the same.  The server does nothing.
+
+      J.  The client receives does not receive a triggering event,
+      meaning that two bits immediately following one another are always
+      the same.  The client does nothing.
+
+
+   +---+----+----+----+----+----+----+----+----+----+----+
+   |   | A  | B  | C  | D  | E  | F  | G  | H  | I  | J  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | A | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  |Q'P | 0  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | B |P'Q'| 0  | 0  |P'Q'|P'Q'|P'Q'| 0  | 0  | 0  | 0  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | C | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  |Q'P | 0  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | D | 0  |P'Q'|P'Q'| 0  | 0  | 0  |P'Q'|P'Q'| 0  | 0  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | E | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  |QP' | 0  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | F | 0  | PQ | PQ | 0  | 0  | 0  | PQ | PQ | 0  | 0  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | G | PQ | 0  | 0  | PQ | PQ | PQ | 0  | 0  | 0  | 0  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | H | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | QP'| 0  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | I | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 1  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+   | J | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 1  | 0  |
+   +---+----+----+----+----+----+----+----+----+----+----+
+
+
+       Figure 6: RRM transition matrix, no reset and no edge-id bit
 
    test
 
@@ -382,18 +442,17 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    entire system back into the situation described in Figure 4.  If we
    let A be the number of ticks between client and server, and B the
    number of ticks between server and client, the total amount of ticks
-   in a round trip time is A+B=C.  If R>1/2 and m >> C, a loop of bits
-   set to v=1 after the second round-trip is perhaps broken after km
-   steps, where k is an integer whose distribution is geometric (1-R).
 
 
 
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 7]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 8]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
+   in a round trip time is A+B=C.  If R>1/2 and m >> C, a loop of bits
+   set to v=1 after the second round-trip is perhaps broken after km
+   steps, where k is an integer whose distribution is geometric (1-R).
    An observation point will pick up sequences of v=0 that can be used
    as a basis for measurement at time intervals km.
 
@@ -442,10 +501,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 8]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 9]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
@@ -501,7 +557,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 9]
+Andersdotter & Sahib       Expires May 1, 2020                 [Page 10]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
@@ -557,4 +613,4 @@ Authors' Addresses
 
 
 
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 10]
+Andersdotter & Sahib       Expires May 1, 2020                 [Page 11]
