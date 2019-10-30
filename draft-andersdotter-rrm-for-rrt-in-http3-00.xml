@@ -69,7 +69,7 @@
 
 <t>Randomized response trials were originally created for binary environments: if a series of measurements have only two possible outcomes (0 or 1, yes or no, true or false, for instance), it is the idea that allowing individual respondents to answer "falsely" at a predictable rate will still preserve the ability to make inferences on the entire set of respondents. The latency spin bit, being a bit, is binary outcome variable. Each time it is measured, the idea is that it can either "truthfully" report its value as what it should be according to <xref target="TRAMMEL"/>, or it could, at some known rate or probability, report the opposite value.</t>
   
-<t>RRMs are easily illustrated for binary response problems. Let's take as an example "Did you go to the last IETF meeting?" The answer to this question is either yes or no. Let us suppose that 25% of all responses are known to be false, and that 80% of all respondents answered yes. Then 60% of the respondents who answered yes can be assumed to have done so truthfully, while 5% of the respondents who answered no have done so falsely. 65% of the respondents can therefore be esimated to have actually attended the last IETF meeting.</t>
+<t>RRMs are easily illustrated for binary response problems. Let's take as an example "Did you go to the last IETF meeting?" The answer to this question is either yes or no. Let us suppose that 25% of all responses are known to be false, and that 80% of all respondents answered yes. Then 60% of the respondents who answered yes can be assumed to have done so truthfully, while 5% of the respondents who answered no have done so falsely. 65% of the respondents can therefore be estimated to have actually attended the last IETF meeting.</t>
 
   <t>RRMs can also be applied to multiple choice questions. Estimation of true proportions becomes more difficult as the number of possible answers per question goes up. Further examples, including formulas and calculations, can be found in <xref target="DWORK"/> and <xref target="FOX"/>.</t>
   
@@ -141,22 +141,23 @@ in <xref target="illus4"/>.</t>
 
 <t>[End quote]</t>
 
-<t> In each iteration of <xref target="illus3" />-<xref target="illus4" /> the a sequence of 0s or 1s the length of which is k0 for iteration 0, k1 for iteration 1, and so forth, can be measured (by X or Y in the picture). The length of each sequence equals the amount of ticks required to pass from the client back to the client. After n iterations, an average can be taken of the measurements (k0, ..., kn). This average can be multiplied by the amount of time per tick (a quantity which is assumed to be known) to get a value for the round-trip time (RTT).</t>
+<t> In each iteration going from <xref target="illus3" /> to <xref target="illus4" /> a sequence of 0s or 1s the length of which is k0 for iteration 0, k1 for iteration 1, and so forth, can be observed (by on-path observers X or Y in <xref target="illus4" />). The length of each sequence equals the amount of ticks required to pass from the client back to the client. After observation n lengths of such sequences, (k[0], ..., k[n]), an average can be taken over k[j]. This average can be multiplied by the amount of time per tick (a quantity which is assumed to be known) to get a value for the round-trip time (RTT).</t>
 
-<t>Applying randomized response mechanisms (RRMs) perturbs the measurements (k0, ..., kn). The perturbation will have the effect of lengthening, shortening, or making more arbitrary the size of the measurement, thereby increasing the variance, or disable the possibility, of an estimator of the true RTT value.</t>
+<t>Applying randomized response mechanisms (RRMs) perturbs the observed sequence lengths (k[0], ..., k[n]). The perturbation will have the effect of lengthening, shortening, or making more arbitrary the lengths of the sequences, thereby increasing the variance, or disable the possibility, of an estimator of the true RTT value.</t>
 
-<t>The server or the client is assumed to always behave as described in <xref target="illus3" />-<xref target="illus4" /> with no RRM. That means the assumed default behaviour is that a "truly" reflecting server that receives a bit set to v=0 always reflects a bit with v=0, while a server which "falsely" reflects a bit receives a bit set to v=0 and reflects a bit set to v=1. Different probabilities could be applied to the server and client, respectively, transmitting a "wrong" value or delaying a reflection.</t>
+<t>The server or the client is assumed to behave as described in <xref target="illus3" /> and <xref target="illus4" />, unless specifically stated otherwise. That means the assumed default behaviour is that a "truly" reflecting server that receives a bit set to v=0 always reflects a bit with v=0. In an RRM application, a server which "falsely" reflects a bit receives a bit set to v=0 and reflects a bit set to v=1. Similarly, the assumed default behaviour of a client is that it "truly" inverts a bit, so that receiving a bit set to v=0 causes it to transmit a bit set to v=1. In an RRM application, the client may "falsely" transmit a bit set to v=0 even when it has received a bit set to v=0.</t>
 
 <t>An additional assumption is that the server and client behave independently of one another. This means that the server has no information on whether the client has omitted an inversion, and the client has no information on whether the server has omitted a reflection. Omissions are therefore independent events.</t>
 
-<t>We have looked at three ways of perturbing measurements:</t>
+<t>We have looked at two ways of perturbing measurements:</t>
 
 <t><list>
   <t>1. RRMs are applied so that the reflections in <xref target="illus3" /> or inversions in <xref target="illus4" /> do not occur with probability P or Q respectively.</t>
-  <t>2. RRMs are applied so that that each bit transmitted from the client, whether or not an inversion is occurring, has a probability P of being the "wrong" value.</t>
-  <t>3. RRMs are applied so that that each bit transmitted from the server, whether or not a reflection is occurring, has a probability Q of being the "wrong" value.</t>
+  <t>2. RRMs are applied so that that each bit transmitted, whether or not an inversion is occurring, has a probability P of being the "wrong" value.</t>
 </list>
 </t>
+
+<t>They will be dealt with in turn, identifying pitfalls and potential ways of addressing those pitfalls. The goal is to have better privacy-protecting properties while continuing to allow utility of the on-path observations in latency measurements.</t>
 
 <section anchor="reflection" title="Case 1: RRM at reflection/inversion">
 
@@ -255,7 +256,7 @@ in <xref target="illus4"/>.</t>
 
     </section>
 
-      <section anchor="discussion1" title="Discussion: Reflection/inversion">
+      <section anchor="discussion1" title="Discussion: RRM at reflection/inversion">
     
 	<t>In <xref target="example1" /> we saw that applying RRM at reflection and inversion could create a situation where the spin edge disappears. There are two parameters, P and Q, which are set by the client and server respectively.</t>
 
@@ -275,7 +276,7 @@ in <xref target="illus4"/>.</t>
 
   <t>Let us say any bit transmitted from either the client or the server is "off" in relation to what it proposed in the Spin Bit model with some probability Q. If Q = 0.5, the spinning bits will come across as a random 0s and 1s and it will be difficult to estimate any edge. However, if Q is less than 0.5, the spin edge can be estimated for instance by computing an average number of 0s or 1s in the past m ticks. For all averages above some cut-off rate, a measurement counter could be incremented by one. Eventually one would end up with a series (k'0, ..., k'n) that roughly corresponds to (k0, ..., kn) above.</t>
 
-  <section anchor="example4" title="Analysis: Estimating true values of a bit, client perturbation">
+  <section anchor="example4" title="Analysis: Client perturbation">
     
 <t>The bit spins in the foreseen way. Every time a bit is transmitted, there is a probability Q that it holds a different value than it should. In <xref target="illus4" /> , either measurements station X or both stations Y observe a passing bit, as well as bits passing before or after that bit (if any). After observing 2k+1 bits (b[-k], ..., b[0], ..., b[k]) the true value of bit b[0] is estimated, for instance based on whether the majority of b[i] were v=0 or v=1. The estimated value is then used to increment a sequence counter.</t>
 
@@ -301,7 +302,7 @@ in <xref target="illus4"/>.</t>
 
   </section>
 
-<section anchor="example5" title="Analysis: Estimating true values of a bit, client and server perturbation">
+<section anchor="example5" title="Analysis: Client and server perturbation">
 
   <t>Now let us consider the case where both the client and server randomize each transmitted bit, with probabilities Q and P respectively. Using the same assumptions as in <xref target="example4" /> and the same target RTT of 13, and letting Q=0.2 and P=0.1, we may end up measuring 0000000000000111111111011100000001010001111010011111 and throw the method of moving windows for k=2 arriving at 000000000001111111111111000000000000011111001111 leaving us with sequences of length (11, 13, 13, 5, 2, 4).</t>
 
@@ -331,7 +332,7 @@ in <xref target="illus4"/>.</t>
 
 <t>In <xref target="example4" /> we saw that setting Q=0.5 could obfuscate the spin edge from an on-path observer. Since the latency spin bit is an optional feature, an easier method of accomplishing such obfuscation would be to simply to turn the spin bit off. Setting Q &lt; 0.5 would instead let the client make it easier or more difficult for the on-path observer to correctly estimate latency. In <xref target="example4" /> and <xref target="example5" /> we particularly conclude that under-estimation of latency is the most likely outcome of this RRM.</t>
   
-  <t>It is not clear that RRM would ultimately bring any particular privacy benefit beyond what is already guaranteed in the present specification of the spin bit in <xref target="I-D-QUIC">Section 17.3.1</xref>. A possible option is to allow a client to set a randomization value P in such a way that it could be close to 0.5, in the case where each bit is always RRM-protected. Then the client would have the option of avoiding latency measurements entirely.</t>
+<t>It is not clear that RRM would ultimately bring any particular privacy benefit beyond what is already guaranteed in the present specification of the spin bit in <xref target="I-D-QUIC">Section 17.3.1</xref>.</t>
 
 </section>
 

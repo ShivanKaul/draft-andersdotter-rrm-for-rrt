@@ -73,16 +73,14 @@ Table of Contents
        3.1.1.  Analysis: No reset and no edge identifying bit  . . .   6
        3.1.2.  Analysis: Reset and no edge identifying bit . . . . .   8
        3.1.3.  Analysis: An edge identifying bit . . . . . . . . . .   9
-       3.1.4.  Discussion: Reflection/inversion  . . . . . . . . . .  10
+       3.1.4.  Discussion: RRM at reflection/inversion . . . . . . .  10
      3.2.  RRM at each bit . . . . . . . . . . . . . . . . . . . . .  10
-       3.2.1.  Analysis: Estimating true values of a bit, client
-               perturbation  . . . . . . . . . . . . . . . . . . . .  11
-       3.2.2.  Analysis: Estimating true values of a bit, client and
-               server perturbation . . . . . . . . . . . . . . . . .  12
+       3.2.1.  Analysis: Client perturbation . . . . . . . . . . . .  11
+       3.2.2.  Analysis: Client and server perturbation  . . . . . .  12
        3.2.3.  Discussion: RRM at each bit . . . . . . . . . . . . .  12
    4.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-   5.  Informative References  . . . . . . . . . . . . . . . . . . .  14
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   5.  Informative References  . . . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
 
@@ -106,6 +104,8 @@ Table of Contents
    facilitate surveys on sensitive topics such as alcohol or drug abuse,
    or political affiliation.  The design allows a survey taker to
    provide, with some known probability P, a "false" answer ("yes"
+   instead of "no", for example) to a survey question.  It is meant to
+
 
 
 
@@ -114,7 +114,6 @@ Andersdotter & Sahib       Expires May 1, 2020                  [Page 2]
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
-   instead of "no", for example) to a survey question.  It is meant to
    encourage truthful answers even in surveys where participants may
    otherwise feel compelled to give false answers.
 
@@ -136,7 +135,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    answered yes.  Then 60% of the respondents who answered yes can be
    assumed to have done so truthfully, while 5% of the respondents who
    answered no have done so falsely. 65% of the respondents can
-   therefore be esimated to have actually attended the last IETF
+   therefore be estimated to have actually attended the last IETF
    meeting.
 
    RRMs can also be applied to multiple choice questions.  Estimation of
@@ -156,20 +155,6 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    [Begin quote] Initially, during connection establishment, no packets
    with a spin bit are in flight, as shown in Figure 1.
 
-
-
-
-
-
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 3]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
-
    +--------+   -  -  -  -  -   +--------+
    |        |     -------->     |        |
    | Client |                   | Server |
@@ -177,6 +162,13 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    +--------+   -  -  -  -  -   +--------+
 
       Figure 1: Initial state, no spin bit between client and server
+
+
+
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 3]
+
+Internet-Draft            rrm-for-rrt-in-http3              October 2019
+
 
    Either the server, the client, or both can begin sending packets with
    short headers after connection establishment, as shown in Figure 2;
@@ -216,6 +208,14 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
                   Figure 4: Server reflects the spin edge
 
+   Five ticks later, the 1-marked packet arrives at the client, which
+   inverts its spin value and sends the inverted value on the next
+   packet it sends, as shown in Figure 5.
+
+
+
+
+
 
 
 
@@ -225,10 +225,6 @@ Andersdotter & Sahib       Expires May 1, 2020                  [Page 4]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
-
-   Five ticks later, the 1-marked packet arrives at the client, which
-   inverts its spin value and sends the inverted value on the next
-   packet it sends, as shown in Figure 5.
 
          obs. points  X  Y
    +--------+   0  1  1  1  1   +--------+
@@ -242,29 +238,32 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
    [End quote]
 
-   In each iteration of Figure 4-Figure 5 the a sequence of 0s or 1s the
-   length of which is k0 for iteration 0, k1 for iteration 1, and so
-   forth, can be measured (by X or Y in the picture).  The length of
-   each sequence equals the amount of ticks required to pass from the
-   client back to the client.  After n iterations, an average can be
-   taken of the measurements (k0, ..., kn).  This average can be
-   multiplied by the amount of time per tick (a quantity which is
-   assumed to be known) to get a value for the round-trip time (RTT).
+   In each iteration going from Figure 4 to Figure 5 a sequence of 0s or
+   1s the length of which is k0 for iteration 0, k1 for iteration 1, and
+   so forth, can be observed (by on-path observers X or Y in Figure 5).
+   The length of each sequence equals the amount of ticks required to
+   pass from the client back to the client.  After observation n lengths
+   of such sequences, (k[0], ..., k[n]), an average can be taken over
+   k[j].  This average can be multiplied by the amount of time per tick
+   (a quantity which is assumed to be known) to get a value for the
+   round-trip time (RTT).
 
-   Applying randomized response mechanisms (RRMs) perturbs the
-   measurements (k0, ..., kn).  The perturbation will have the effect of
-   lengthening, shortening, or making more arbitrary the size of the
-   measurement, thereby increasing the variance, or disable the
-   possibility, of an estimator of the true RTT value.
+   Applying randomized response mechanisms (RRMs) perturbs the observed
+   sequence lengths (k[0], ..., k[n]).  The perturbation will have the
+   effect of lengthening, shortening, or making more arbitrary the
+   lengths of the sequences, thereby increasing the variance, or disable
+   the possibility, of an estimator of the true RTT value.
 
-   The server or the client is assumed to always behave as described in
-   Figure 4-Figure 5 with no RRM.  That means the assumed default
-   behaviour is that a "truly" reflecting server that receives a bit set
-   to v=0 always reflects a bit with v=0, while a server which "falsely"
-   reflects a bit receives a bit set to v=0 and reflects a bit set to
-   v=1.  Different probabilities could be applied to the server and
-   client, respectively, transmitting a "wrong" value or delaying a
-   reflection.
+   The server or the client is assumed to behave as described in
+   Figure 4 and Figure 5, unless specifically stated otherwise.  That
+   means the assumed default behaviour is that a "truly" reflecting
+   server that receives a bit set to v=0 always reflects a bit with v=0.
+   In an RRM application, a server which "falsely" reflects a bit
+   receives a bit set to v=0 and reflects a bit set to v=1.  Similarly,
+   the assumed default behaviour of a client is that it "truly" inverts
+   a bit, so that receiving a bit set to v=0 causes it to transmit a bit
+   set to v=1.  In an RRM application, the client may "falsely" transmit
+   a bit set to v=0 even when it has received a bit set to v=0.
 
    An additional assumption is that the server and client behave
    independently of one another.  This means that the server has no
@@ -272,7 +271,8 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    client has no information on whether the server has omitted a
    reflection.  Omissions are therefore independent events.
 
-   We have looked at three ways of perturbing measurements:
+   We have looked at two ways of perturbing measurements:
+
 
 
 
@@ -286,13 +286,14 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
       inversions in Figure 5 do not occur with probability P or Q
       respectively.
 
-      2.  RRMs are applied so that that each bit transmitted from the
-      client, whether or not an inversion is occurring, has a
-      probability P of being the "wrong" value.
+      2.  RRMs are applied so that that each bit transmitted, whether or
+      not an inversion is occurring, has a probability P of being the
+      "wrong" value.
 
-      3.  RRMs are applied so that that each bit transmitted from the
-      server, whether or not a reflection is occurring, has a
-      probability Q of being the "wrong" value.
+   They will be dealt with in turn, identifying pitfalls and potential
+   ways of addressing those pitfalls.  The goal is to have better
+   privacy-protecting properties while continuing to allow utility of
+   the on-path observations in latency measurements.
 
 3.1.  Case 1: RRM at reflection/inversion
 
@@ -328,8 +329,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    reflection (see Figure 4), it does not reflect with probability P.
    At the point of inversion (see Figure 5), it does not invert with
    probability Q.  We consider P and Q respectively to be the
-   probability that the server or client does not behave in the way
-   specified.
+
 
 
 
@@ -337,6 +337,9 @@ Andersdotter & Sahib       Expires May 1, 2020                  [Page 6]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
+
+   probability that the server or client does not behave in the way
+   specified.
 
    Let -> be the operation that a bit changes value.  A correct
    reflection will be denoted R: a->a.  A correct inversion is denoted
@@ -379,9 +382,6 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
    With this information, and the probabilities determined above, we can
    create a transition matrix in the Markovian sense.
-
-
-
 
 
 
@@ -506,7 +506,7 @@ Andersdotter & Sahib       Expires May 1, 2020                  [Page 9]
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
-3.1.4.  Discussion: Reflection/inversion
+3.1.4.  Discussion: RRM at reflection/inversion
 
    In Section 3.1.1 we saw that applying RRM at reflection and inversion
    could create a situation where the spin edge disappears.  There are
@@ -566,7 +566,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    with a series (k'0, ..., k'n) that roughly corresponds to (k0, ...,
    kn) above.
 
-3.2.1.  Analysis: Estimating true values of a bit, client perturbation
+3.2.1.  Analysis: Client perturbation
 
    The bit spins in the foreseen way.  Every time a bit is transmitted,
    there is a probability Q that it holds a different value than it
@@ -633,8 +633,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    (10+14+14+10)/4=12.  This is much better precision if the target
    round-trip time estimation is 13.
 
-3.2.2.  Analysis: Estimating true values of a bit, client and server
-        perturbation
+3.2.2.  Analysis: Client and server perturbation
 
    Now let us consider the case where both the client and server
    randomize each transmitted bit, with probabilities Q and P
@@ -665,7 +664,8 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    spin bit is optional. (see Sec. 7.2 [RFC6973] and Section 17.3.1
    [I-D-QUIC]).
 
-
+   In Section 3.2.2 we introduced the possiblity of yet another
+   parameter P, to be set by the server for determining server-side RRM
 
 
 
@@ -674,8 +674,6 @@ Andersdotter & Sahib       Expires May 1, 2020                 [Page 12]
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
-   In Section 3.2.2 we introduced the possiblity of yet another
-   parameter P, to be set by the server for determining server-side RRM
    application.  The moving windows filtering method applied to make
    sense of on-path observations remains the same.
 
@@ -714,21 +712,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
    It is not clear that RRM would ultimately bring any particular
    privacy benefit beyond what is already guaranteed in the present
-   specification of the spin bit in Section 17.3.1 [I-D-QUIC].  A
-   possible option is to allow a client to set a randomization value P
-   in such a way that it could be close to 0.5, in the case where each
-   bit is always RRM-protected.  Then the client would have the option
-   of avoiding latency measurements entirely.
-
-
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 13]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
+   specification of the spin bit in Section 17.3.1 [I-D-QUIC].
 
 5.  Informative References
 
@@ -737,6 +721,14 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
               <https://datatracker.ietf.org/meeting/104/materials/
               slides-104-pearg-amelia-christoffer-differential-privacy-
               00>.
+
+
+
+
+Andersdotter & Sahib       Expires May 1, 2020                 [Page 13]
+
+Internet-Draft            rrm-for-rrt-in-http3              October 2019
+
 
    [DWORK]    Roth, A. and C. Dwork, "The Algorithmic Foundations of
               Differential Privacy", 2014,
@@ -773,6 +765,14 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
               <https://tools.ietf.org/html/
               draft-martini-hrpc-quichr-00>.
 
+   [TRAMMEL]  Trammel, B., Boucadair, M., Even, R., Fioccola, G.,
+              Fossati, T., Ihlar, M., Morton, A., and E. Stephan,
+              "Adding Explicit Passive Measurability of Two-Way Latency
+              to the QUIC Transport Protocol (draft-trammell-quic-spin-
+              03)", May 2018, <https://www.ietf.org/archive/id/
+              draft-trammell-quic-spin-03.txt>.
+
+Authors' Addresses
 
 
 
@@ -785,15 +785,6 @@ Andersdotter & Sahib       Expires May 1, 2020                 [Page 14]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
-
-   [TRAMMEL]  Trammel, B., Boucadair, M., Even, R., Fioccola, G.,
-              Fossati, T., Ihlar, M., Morton, A., and E. Stephan,
-              "Adding Explicit Passive Measurability of Two-Way Latency
-              to the QUIC Transport Protocol (draft-trammell-quic-spin-
-              03)", May 2018, <https://www.ietf.org/archive/id/
-              draft-trammell-quic-spin-03.txt>.
-
-Authors' Addresses
 
    Amelia Andersdotter
    ARTICLE 19
@@ -808,6 +799,15 @@ Authors' Addresses
    Salesforce
 
    Email: shivankaulsahib@gmail.com
+
+
+
+
+
+
+
+
+
 
 
 

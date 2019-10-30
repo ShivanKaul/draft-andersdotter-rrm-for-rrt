@@ -381,10 +381,10 @@
 <link href="#rfc.section.3.1.1" rel="Chapter" title="3.1.1 Analysis: No reset and no edge identifying bit">
 <link href="#rfc.section.3.1.2" rel="Chapter" title="3.1.2 Analysis: Reset and no edge identifying bit">
 <link href="#rfc.section.3.1.3" rel="Chapter" title="3.1.3 Analysis: An edge identifying bit">
-<link href="#rfc.section.3.1.4" rel="Chapter" title="3.1.4 Discussion: Reflection/inversion">
+<link href="#rfc.section.3.1.4" rel="Chapter" title="3.1.4 Discussion: RRM at reflection/inversion">
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 RRM at each bit">
-<link href="#rfc.section.3.2.1" rel="Chapter" title="3.2.1 Analysis: Estimating true values of a bit, client perturbation">
-<link href="#rfc.section.3.2.2" rel="Chapter" title="3.2.2 Analysis: Estimating true values of a bit, client and server perturbation">
+<link href="#rfc.section.3.2.1" rel="Chapter" title="3.2.1 Analysis: Client perturbation">
+<link href="#rfc.section.3.2.2" rel="Chapter" title="3.2.2 Analysis: Client and server perturbation">
 <link href="#rfc.section.3.2.3" rel="Chapter" title="3.2.3 Discussion: RRM at each bit">
 <link href="#rfc.section.4" rel="Chapter" title="4 Conclusion">
 <link href="#rfc.references" rel="Chapter" title="5 Informative References">
@@ -465,13 +465,13 @@
 </li>
 <li>3.1.3.   <a href="#rfc.section.3.1.3">Analysis: An edge identifying bit</a>
 </li>
-<li>3.1.4.   <a href="#rfc.section.3.1.4">Discussion: Reflection/inversion</a>
+<li>3.1.4.   <a href="#rfc.section.3.1.4">Discussion: RRM at reflection/inversion</a>
 </li>
 </ul><li>3.2.   <a href="#rfc.section.3.2">RRM at each bit</a>
 </li>
-<ul><li>3.2.1.   <a href="#rfc.section.3.2.1">Analysis: Estimating true values of a bit, client perturbation</a>
+<ul><li>3.2.1.   <a href="#rfc.section.3.2.1">Analysis: Client perturbation</a>
 </li>
-<li>3.2.2.   <a href="#rfc.section.3.2.2">Analysis: Estimating true values of a bit, client and server perturbation</a>
+<li>3.2.2.   <a href="#rfc.section.3.2.2">Analysis: Client and server perturbation</a>
 </li>
 <li>3.2.3.   <a href="#rfc.section.3.2.3">Discussion: RRM at each bit</a>
 </li>
@@ -494,7 +494,7 @@
 </h1>
 <p id="rfc.section.2.p.1">Randomized Response Mechanisms (RRM) rely on the ability to make sense of data with known errors and were originally developed to facilitate surveys on sensitive topics such as alcohol or drug abuse, or political affiliation. The design allows a survey taker to provide, with some known probability P, a "false" answer ("yes" instead of "no", for example) to a survey question. It is meant to encourage truthful answers even in surveys where participants may otherwise feel compelled to give false answers.</p>
 <p id="rfc.section.2.p.2">Randomized response trials were originally created for binary environments: if a series of measurements have only two possible outcomes (0 or 1, yes or no, true or false, for instance), it is the idea that allowing individual respondents to answer "falsely" at a predictable rate will still preserve the ability to make inferences on the entire set of respondents. The latency spin bit, being a bit, is binary outcome variable. Each time it is measured, the idea is that it can either "truthfully" report its value as what it should be according to <a href="#TRAMMEL" class="xref">[TRAMMEL]</a>, or it could, at some known rate or probability, report the opposite value.</p>
-<p id="rfc.section.2.p.3">RRMs are easily illustrated for binary response problems. Let's take as an example "Did you go to the last IETF meeting?" The answer to this question is either yes or no. Let us suppose that 25% of all responses are known to be false, and that 80% of all respondents answered yes. Then 60% of the respondents who answered yes can be assumed to have done so truthfully, while 5% of the respondents who answered no have done so falsely. 65% of the respondents can therefore be esimated to have actually attended the last IETF meeting.</p>
+<p id="rfc.section.2.p.3">RRMs are easily illustrated for binary response problems. Let's take as an example "Did you go to the last IETF meeting?" The answer to this question is either yes or no. Let us suppose that 25% of all responses are known to be false, and that 80% of all respondents answered yes. Then 60% of the respondents who answered yes can be assumed to have done so truthfully, while 5% of the respondents who answered no have done so falsely. 65% of the respondents can therefore be estimated to have actually attended the last IETF meeting.</p>
 <p id="rfc.section.2.p.4">RRMs can also be applied to multiple choice questions. Estimation of true proportions becomes more difficult as the number of possible answers per question goes up. Further examples, including formulas and calculations, can be found in <a href="#DWORK" class="xref">[DWORK]</a> and <a href="#FOX" class="xref">[FOX]</a>.</p>
 <h1 id="rfc.section.3">
 <a href="#rfc.section.3">3.</a> <a href="#asb" id="asb">Application to latency spin bit</a>
@@ -558,20 +558,20 @@
 </pre>
 <p class="figure">Figure 5: Client inverts the spin edge</p>
 <p id="rfc.section.3.p.7">[End quote]</p>
-<p id="rfc.section.3.p.8">In each iteration of <a href="#illus3" class="xref">Figure 4</a>-<a href="#illus4" class="xref">Figure 5</a> the a sequence of 0s or 1s the length of which is k0 for iteration 0, k1 for iteration 1, and so forth, can be measured (by X or Y in the picture). The length of each sequence equals the amount of ticks required to pass from the client back to the client. After n iterations, an average can be taken of the measurements (k0, ..., kn). This average can be multiplied by the amount of time per tick (a quantity which is assumed to be known) to get a value for the round-trip time (RTT).</p>
-<p id="rfc.section.3.p.9">Applying randomized response mechanisms (RRMs) perturbs the measurements (k0, ..., kn). The perturbation will have the effect of lengthening, shortening, or making more arbitrary the size of the measurement, thereby increasing the variance, or disable the possibility, of an estimator of the true RTT value.</p>
-<p id="rfc.section.3.p.10">The server or the client is assumed to always behave as described in <a href="#illus3" class="xref">Figure 4</a>-<a href="#illus4" class="xref">Figure 5</a> with no RRM. That means the assumed default behaviour is that a "truly" reflecting server that receives a bit set to v=0 always reflects a bit with v=0, while a server which "falsely" reflects a bit receives a bit set to v=0 and reflects a bit set to v=1. Different probabilities could be applied to the server and client, respectively, transmitting a "wrong" value or delaying a reflection.</p>
+<p id="rfc.section.3.p.8">In each iteration going from <a href="#illus3" class="xref">Figure 4</a> to <a href="#illus4" class="xref">Figure 5</a> a sequence of 0s or 1s the length of which is k0 for iteration 0, k1 for iteration 1, and so forth, can be observed (by on-path observers X or Y in <a href="#illus4" class="xref">Figure 5</a>). The length of each sequence equals the amount of ticks required to pass from the client back to the client. After observation n lengths of such sequences, (k[0], ..., k[n]), an average can be taken over k[j]. This average can be multiplied by the amount of time per tick (a quantity which is assumed to be known) to get a value for the round-trip time (RTT).</p>
+<p id="rfc.section.3.p.9">Applying randomized response mechanisms (RRMs) perturbs the observed sequence lengths (k[0], ..., k[n]). The perturbation will have the effect of lengthening, shortening, or making more arbitrary the lengths of the sequences, thereby increasing the variance, or disable the possibility, of an estimator of the true RTT value.</p>
+<p id="rfc.section.3.p.10">The server or the client is assumed to behave as described in <a href="#illus3" class="xref">Figure 4</a> and <a href="#illus4" class="xref">Figure 5</a>, unless specifically stated otherwise. That means the assumed default behaviour is that a "truly" reflecting server that receives a bit set to v=0 always reflects a bit with v=0. In an RRM application, a server which "falsely" reflects a bit receives a bit set to v=0 and reflects a bit set to v=1. Similarly, the assumed default behaviour of a client is that it "truly" inverts a bit, so that receiving a bit set to v=0 causes it to transmit a bit set to v=1. In an RRM application, the client may "falsely" transmit a bit set to v=0 even when it has received a bit set to v=0.</p>
 <p id="rfc.section.3.p.11">An additional assumption is that the server and client behave independently of one another. This means that the server has no information on whether the client has omitted an inversion, and the client has no information on whether the server has omitted a reflection. Omissions are therefore independent events.</p>
-<p id="rfc.section.3.p.12">We have looked at three ways of perturbing measurements:</p>
+<p id="rfc.section.3.p.12">We have looked at two ways of perturbing measurements:</p>
 <p></p>
 
 <ul class="empty">
 <li>1. RRMs are applied so that the reflections in <a href="#illus3" class="xref">Figure 4</a> or inversions in <a href="#illus4" class="xref">Figure 5</a> do not occur with probability P or Q respectively.</li>
-<li>2. RRMs are applied so that that each bit transmitted from the client, whether or not an inversion is occurring, has a probability P of being the "wrong" value.</li>
-<li>3. RRMs are applied so that that each bit transmitted from the server, whether or not a reflection is occurring, has a probability Q of being the "wrong" value.</li>
+<li>2. RRMs are applied so that that each bit transmitted, whether or not an inversion is occurring, has a probability P of being the "wrong" value.</li>
 </ul>
 
 <p> </p>
+<p id="rfc.section.3.p.14">They will be dealt with in turn, identifying pitfalls and potential ways of addressing those pitfalls. The goal is to have better privacy-protecting properties while continuing to allow utility of the on-path observations in latency measurements.</p>
 <h1 id="rfc.section.3.1">
 <a href="#rfc.section.3.1">3.1.</a> <a href="#reflection" id="reflection">Case 1: RRM at reflection/inversion</a>
 </h1>
@@ -650,7 +650,7 @@
 <p id="rfc.section.3.1.3.p.2">Introducing an edge identifying bit, which may or may not hold a true value with probability S, could help mitigate this problem. This could effectively be seen as a recursive RRM: because the original RRM risks removing the utility of the spin bit entirely, another bit to which RRM is applied is added.</p>
 <p id="rfc.section.3.1.3.p.3">Logically, adding another identifying bit increases the possible set of states of the Markovian chains described in <a href="#example1" class="xref">Section 3.1.1</a> and <a href="#example2" class="xref">Section 3.1.2</a>. In fact, the systems would still possess similar short-comings, but with different probabilities. The exception is if the identifying bit is always on with probability S=1. In this case, the privacy-enhancing properties sought in <a href="#example1" class="xref">Section 3.1.1</a> and <a href="#example2" class="xref">Section 3.1.2</a> would be lost, since the main goal of RRM in both of those cases is to perturb the measurements (k0, ...., kn) used to estimate round-trip times.</p>
 <h1 id="rfc.section.3.1.4">
-<a href="#rfc.section.3.1.4">3.1.4.</a> <a href="#discussion1" id="discussion1">Discussion: Reflection/inversion</a>
+<a href="#rfc.section.3.1.4">3.1.4.</a> <a href="#discussion1" id="discussion1">Discussion: RRM at reflection/inversion</a>
 </h1>
 <p id="rfc.section.3.1.4.p.1">In <a href="#example1" class="xref">Section 3.1.1</a> we saw that applying RRM at reflection and inversion could create a situation where the spin edge disappears. There are two parameters, P and Q, which are set by the client and server respectively.</p>
 <p id="rfc.section.3.1.4.p.2">We could reduce the risk of the spin edge disappearing by setting the probability of a wrongful inversion to Q=0. However, inversion is an activity undertaken by the client and Q is a parameter under the clients control. Since the client is the entity assumed, in most cases, to be the most likely actor to be a human, natural person (in either case, more likely than the server), this solution would remove power from the client. Forcibly setting Q=0 would violate the assumptions of user control in <a href="#RFC6973" class="xref">Section 7.2</a>.</p>
@@ -662,7 +662,7 @@
 </h1>
 <p id="rfc.section.3.2.p.1">Let us say any bit transmitted from either the client or the server is "off" in relation to what it proposed in the Spin Bit model with some probability Q. If Q = 0.5, the spinning bits will come across as a random 0s and 1s and it will be difficult to estimate any edge. However, if Q is less than 0.5, the spin edge can be estimated for instance by computing an average number of 0s or 1s in the past m ticks. For all averages above some cut-off rate, a measurement counter could be incremented by one. Eventually one would end up with a series (k'0, ..., k'n) that roughly corresponds to (k0, ..., kn) above.</p>
 <h1 id="rfc.section.3.2.1">
-<a href="#rfc.section.3.2.1">3.2.1.</a> <a href="#example4" id="example4">Analysis: Estimating true values of a bit, client perturbation</a>
+<a href="#rfc.section.3.2.1">3.2.1.</a> <a href="#example4" id="example4">Analysis: Client perturbation</a>
 </h1>
 <p id="rfc.section.3.2.1.p.1">The bit spins in the foreseen way. Every time a bit is transmitted, there is a probability Q that it holds a different value than it should. In <a href="#illus4" class="xref">Figure 5</a> , either measurements station X or both stations Y observe a passing bit, as well as bits passing before or after that bit (if any). After observing 2k+1 bits (b[-k], ..., b[0], ..., b[k]) the true value of bit b[0] is estimated, for instance based on whether the majority of b[i] were v=0 or v=1. The estimated value is then used to increment a sequence counter.</p>
 <p id="rfc.section.3.2.1.p.2">The estimator follows a binomial distribution (drawing with replacement), and the risk of misidentifying a bit is equal to the risk of having (k+1) v=1 bits in the 2k observations where b[0] "should" be attributed to v=0. This risk depends on Q and k.</p>
@@ -680,7 +680,7 @@
 <p id="rfc.section.3.2.1.p.8">Divide the RTT measurements into moving windows with k=2 (i.e., each window contains (b[-2], b[-1], b[0], b[1], b[2])) to arrive at [(10010), (00100), (01000), (10000), (00000), (00000), (00001), (00010), (00100), etc]. Each window estimates b[0], so the "true" value of bit 2 will be estimated by (10010), the true value of bit three from (00100), and so forth.</p>
 <p id="rfc.section.3.2.1.p.9">Applying the procedure we are left with 000000000011111111111111000000000011111111111111, or (10+14+14+10)/4=12. This is much better precision if the target round-trip time estimation is 13.</p>
 <h1 id="rfc.section.3.2.2">
-<a href="#rfc.section.3.2.2">3.2.2.</a> <a href="#example5" id="example5">Analysis: Estimating true values of a bit, client and server perturbation</a>
+<a href="#rfc.section.3.2.2">3.2.2.</a> <a href="#example5" id="example5">Analysis: Client and server perturbation</a>
 </h1>
 <p id="rfc.section.3.2.2.p.1">Now let us consider the case where both the client and server randomize each transmitted bit, with probabilities Q and P respectively. Using the same assumptions as in <a href="#example4" class="xref">Section 3.2.1</a> and the same target RTT of 13, and letting Q=0.2 and P=0.1, we may end up measuring 0000000000000111111111011100000001010001111010011111 and throw the method of moving windows for k=2 arriving at 000000000001111111111111000000000000011111001111 leaving us with sequences of length (11, 13, 13, 5, 2, 4).</p>
 <p id="rfc.section.3.2.2.p.2">As previously mentioned, the risk of a bit being misidentified is related to P, Q and k. Because a misidentified bit always make sequences appear to be of shorter length, the sequences that measure greater length should be taken as the RTT estimate. In this event that we choose to only use that half of the esimated sequences with the greatest length as a basis for the latency calculations, we would have (11+13+13)/3=12.3 as the estimator for the RTT.</p>
@@ -696,7 +696,7 @@
 <p id="rfc.section.4.p.1">The spin bit is associated with an IP address which creates linkability (see <a href="#RFC6973" class="xref">[RFC6973]</a> and <a href="#RFC8280" class="xref">[RFC8280]</a>). The privacy concern associated with a spin bit is, additionally, that latency measurements will enable inferrence of the location or distance of the device associated with that particular IP address.</p>
 <p id="rfc.section.4.p.2">In <a href="#example1" class="xref">Section 3.1.1</a>, it was seen Randomized response mechanisms (RRM) would either cause the utility of the spin bit to disappear entirely (by rendering any measurement futile) or cause the primary privacy-reducing inferrence to remain a problem, as long as a sufficiently large amount sequential measurements were done. Each measurement would continue to be tied to fixed identifier, which necessarily implies privacy loss. Interestingly, <a href="#example1" class="xref">Section 3.1.1</a> also highlights fundamental trade-offs between privacy-preserving mechanisms and measurement utility: by setting Q=0, we were able to avoid ending up in a sink, which would improve the possibility of measurement, but in doing so removed all agency from the client to falsify its responses.</p>
 <p id="rfc.section.4.p.3">In <a href="#example4" class="xref">Section 3.2.1</a> we saw that setting Q=0.5 could obfuscate the spin edge from an on-path observer. Since the latency spin bit is an optional feature, an easier method of accomplishing such obfuscation would be to simply to turn the spin bit off. Setting Q &lt; 0.5 would instead let the client make it easier or more difficult for the on-path observer to correctly estimate latency. In <a href="#example4" class="xref">Section 3.2.1</a> and <a href="#example5" class="xref">Section 3.2.2</a> we particularly conclude that under-estimation of latency is the most likely outcome of this RRM.</p>
-<p id="rfc.section.4.p.4">It is not clear that RRM would ultimately bring any particular privacy benefit beyond what is already guaranteed in the present specification of the spin bit in <a href="#I-D-QUIC" class="xref">Section 17.3.1</a>. A possible option is to allow a client to set a randomization value P in such a way that it could be close to 0.5, in the case where each bit is always RRM-protected. Then the client would have the option of avoiding latency measurements entirely.</p>
+<p id="rfc.section.4.p.4">It is not clear that RRM would ultimately bring any particular privacy benefit beyond what is already guaranteed in the present specification of the spin bit in <a href="#I-D-QUIC" class="xref">Section 17.3.1</a>.</p>
 <h1 id="rfc.references">
 <a href="#rfc.references">5.</a> Informative References</h1>
 <table><tbody>
