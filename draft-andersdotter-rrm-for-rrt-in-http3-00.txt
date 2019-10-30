@@ -71,12 +71,12 @@ Table of Contents
    3.  Application to Spin Bit . . . . . . . . . . . . . . . . . . .   3
      3.1.  Case 1: RRM at reflection/inversion . . . . . . . . . . .   5
        3.1.1.  Analysis: No reset and no edge identifying bit  . . .   6
-       3.1.2.  Analysis: Reset and no edge identifying bit . . . . .   8
-     3.2.  RRM at each bit . . . . . . . . . . . . . . . . . . . . .   9
-       3.2.1.  Example . . . . . . . . . . . . . . . . . . . . . . .   9
-   4.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-   5.  Informative References  . . . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+       3.1.2.  Analysis: Reset and no edge identifying bit . . . . .   7
+     3.2.  RRM at each bit . . . . . . . . . . . . . . . . . . . . .   8
+       3.2.1.  Analysis: Estimating true values of a bit . . . . . .   8
+   4.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+   5.  Informative References  . . . . . . . . . . . . . . . . . . .   9
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
 
@@ -306,29 +306,29 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    probability that the server or client does not behave in the way
    specified.
 
-   That gives four possible outcomes for the bit immediately following
-   one complete round-trip:
+   Let -> be the operation that a bit changes value.  A correct
+   reflection will be denoted R: a->a.  A correct inversion is denoted
+   I:a->b.  Prefixing R or I with a ! denotes that reflection/inversion
+   was not done correctly.  The variables a and b assume the values 0 or
+   1 and are never equal.  P(R: a->a) = 1-P and P(I: a->b) = 1-Q, while
+   P(!R: a->b) = P and P(!I: a->a) = Q.  An expression like R(v: 1->1)
+   -> !I(v: 1->1) means that a bit whose initial value is 1 is correctly
+   reflected, and then incorrectly inverted.  We can abbreviate this to
+   [1->1->1].  R must follow I and vice versa, so we will have a chain
+   of events R->I->R->I-> etc.
 
-      1.  With probability P(1-Q) the first bit in the second round-trip
-      transmitted by the client will be v=1.  Since v=1 is the same bit
-      value that the client used to initiate the spin, there will no
-      longer be a clear spin edge.
+   In order for a reflection or an inversion to occur, there must be a
+   trigger.  The spin edge is the trigger.  But in the event of
+   [1->1->1] the spin edge has disappeared!  Once the bit spins back to
+   the reflection, it will have the same value as when it started.  In
+   fact, regardless of the starting value, any R->I event that results
+   in [1->1] or [0->0] leads to a loop.
 
-      2.  With probability (1-P)Q the first bit in the second round-trip
-      transmitted by the client will, again, be v=1.
+   We can define the following events:
 
-      3.  With probability (1-P)(1-Q) the first bit in the second round-
-      trip transmitted by the client will be v=0.  This such a
-      measurement as is foreseen by the specification.
+      A: [1->1].
 
-      4.  With probability PQ the the first and a half rotation of the
-      spin bit will produce such a measurement as is foreseen by the
-      specification.  The result would as if a bit started spinning with
-      v=0 at the server in Figure 5 and continued without inversion
-      (i.e. remaining at v=0) into the future.
-
-   In two of these outcomes, the spin edge is eradicated.  The
-   probability of elimination is minimized by setting P=Q=1/2, but even
+      B: [0->0].
 
 
 
@@ -338,54 +338,54 @@ Andersdotter & Sahib       Expires May 1, 2020                  [Page 6]
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
-   this would imply that half of the time the spin bit is no longer able
-   to serve its purpose.
+      C: [0->1].
 
-   We can represent this as a Markov transition matrix, where Q' and P'
-   will be used as short-hand for (1-Q) and (1-P).  Define the following
-   events:
+      D: [1->0].
 
-      A.  The first bit in the k:th round-trip initiated by the client
-      is v=1.  It receives a correctly reflected bit from the server.
-      The first bit in the (k+1):th round-trip as transmitted by the
-      client is v=1, meaning that the client has omitted an inversion.
+   Event A can occur as a result of (!R, !I) for starting point v=0, or
+   as a result of (R, !I) for starting point v=1 or v=0.  Event B can
+   occur as a result of (!R, !I) for starting point v=1, or as a result
+   of (R, !I) for starting point v=1 or v=0.  Event C occurs as a result
+   of (!R, I) for starting point v=1, or (R, I) for starting point v=0.
+   Event D occurs as a result of (!R, I) for starting point v=0 or (R,
+   I) for starting point v=0.  The starting point v can be taken as the
+   final digit in each event, meaning that for the event following C,
+   the starting point would be v=1, and for the event following D, the
+   starting point would be v=0.
 
-      B.  The first bit in the k:th round-trip initiated by the client
-      is v=0.  It receives a correctly reflected bit from the server.
-      The first bit in the (k+1):th round-trip as transmitted by the
-      client is v=1, meaning that the client has correctly inverted.
-
-      C.  The first bit in the k:th round-trip initiated by the client
-      is v=0.  It receives a correctly reflected bit from the server.
-      The first bit in the (k+1):th round-trip as transmitted by the
-      client is v=0, meaning that the client has omitted an inversion.
-
-      D.  The first bit in the k:th round-trip initiated by the client
-      is v=1.  It receives a correctly reflected bit from the server.
-      The first bit in the (k+1):th round-trip as transmitted by the
-      client is v=0, meaning that the client has correctly inverted.
-
-      E.  The first bit in the k:th round-trip initiated by the client
-      is v=1.  It does not receive a reflected bit from the server.  The
-      first bit in the (k+1):th round-trip as transmitted by the client
-      is v=1, meaning that the client has correctly inverted.
-
-      F.  The first bit in the k:th round-trip initiated by the client
-      is v=1.  It does not receive a reflected bit from the server.  The
-      first bit in the (k+1):th round-trip as transmitted by the client
-      is v=0, meaning that the client has omitted an inversion.
-
-      G.  The first bit in the k:th round-trip initiated by the client
-      is v=0.  It does not receive a reflected bit from the server.  The
-      first bit in the (k+1):th round-trip as transmitted by the client
-      is v=1, meaning that the client has omitted an inversion.
-
-      H.  The first bit in the k:th round-trip initiated by the client
-      is v=0.  It does not receive a reflected bit from the server.  The
-      first bit in the (k+1):th round-trip as transmitted by the client
-      is v=0, meaning that the client has correctly inverted.
+   With this information, and the probabilities determined above, we can
+   create a transition matrix in the Markovian sense.
 
 
+   +----+-----------+-----------+-----------+-----------+
+   |    |     A     |     B     |     C     |     D     |
+   +----+-----------+-----------+-----------+-----------+
+   | A  |     1     |     0     |     0     |     0     |
+   +----+-----------+-----------+-----------+-----------+
+   | B  |     0     |     1     |     0     |     0     |
+   +----+-----------+-----------+-----------+-----------+
+   | C  |  (1-P)Q   |     Q     |   P(1-Q)  | (1-P)(1-Q)|
+   +----+-----------+-----------+-----------+-----------+
+   | D  |     Q     |  (1-P)Q   |(1-P)(1-Q) |  P(1-Q)   |
+   +----+-----------+-----------+-----------+-----------+
+
+       Figure 6: RRM transition matrix, no reset and no edge-id bit
+
+   It should be quite clear from this matrix that events A and B act as
+   sinks.  Because ending in a sink removes all possibility of future
+   measurements, we could hope to avoid this situation.  The easiest way
+   is setting Q=0, which would imply there is always a correct
+   inversion.  For any Q > 0, this process will eventually end up in a
+   sink.
+
+3.1.2.  Analysis: Reset and no edge identifying bit
+
+   The possible outcomes are as in Section 3.1.1, and the problem to be
+   resolved is that the spin edge eventually disappears with probability
+   1.
+
+   Introducing the probability R of a random re-set of the spin bit at
+   every m:th bit transmission can "re-initiate" the edge by taking the
 
 
 
@@ -394,62 +394,9 @@ Andersdotter & Sahib       Expires May 1, 2020                  [Page 7]
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
-      I.  The server receives does not receive a triggering event,
-      meaning that two bits immediately following one another are always
-      the same.  The server does nothing.
-
-      J.  The client receives does not receive a triggering event,
-      meaning that two bits immediately following one another are always
-      the same.  The client does nothing.
-
-
-   +---+----+----+----+----+----+----+----+----+----+----+
-   |   | A  | B  | C  | D  | E  | F  | G  | H  | I  | J  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | A | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  |Q'P | 0  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | B |P'Q'| 0  | 0  |P'Q'|P'Q'|P'Q'| 0  | 0  | 0  | 0  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | C | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  |Q'P | 0  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | D | 0  |P'Q'|P'Q'| 0  | 0  | 0  |P'Q'|P'Q'| 0  | 0  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | E | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  |QP' | 0  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | F | 0  | PQ | PQ | 0  | 0  | 0  | PQ | PQ | 0  | 0  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | G | PQ | 0  | 0  | PQ | PQ | PQ | 0  | 0  | 0  | 0  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | H | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | QP'| 0  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | I | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 1  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-   | J | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 0  | 1  | 0  |
-   +---+----+----+----+----+----+----+----+----+----+----+
-
-
-       Figure 6: RRM transition matrix, no reset and no edge-id bit
-
-   test
-
-3.1.2.  Analysis: Reset and no edge identifying bit
-
-   The possible outcomes are as in Section 3.1.1, and the problem to be
-   resolved is that the spin edge disappears with probability 1/2.
-
-   Introducing the probability R of a random re-set of the spin bit at
-   every m:th bit transmission can "re-initiate" the edge by taking the
    entire system back into the situation described in Figure 4.  If we
    let A be the number of ticks between client and server, and B the
    number of ticks between server and client, the total amount of ticks
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 8]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
-
    in a round trip time is A+B=C.  If R>1/2 and m >> C, a loop of bits
    set to v=1 after the second round-trip is perhaps broken after km
    steps, where k is an integer whose distribution is geometric (1-R).
@@ -476,7 +423,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    with a series (k'0, ..., k'n) that roughly corresponds to (k0, ...,
    kn) above.
 
-3.2.1.  Example
+3.2.1.  Analysis: Estimating true values of a bit
 
    The bit spins in the foreseen way.  Every time a bit is transmitted,
    there is a probability P that it holds a different value than it
@@ -495,16 +442,17 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    Setting k too large creates a risk of having estimator sequences that
    are longer than the round-trip time (RTT) to be measured.  If P is
    reasonably small, estimation will still eventually be possible after
-   a sufficient amount of measurements.  One option is to keep P
-   variable and determined by the client, introducing the possibility of
-   choice in RTT measurements.
 
 
 
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 9]
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 8]
 
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
+
+   a sufficient amount of measurements.  One option is to keep P
+   variable and determined by the client, introducing the possibility of
+   choice in RTT measurements.
 
 4.  Conclusion
 
@@ -550,17 +498,18 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
               <https://tools.ietf.org/html/
               draft-ietf-quic-transport-23>.
 
+
+
+
+Andersdotter & Sahib       Expires May 1, 2020                  [Page 9]
+
+Internet-Draft            rrm-for-rrt-in-http3              October 2019
+
+
    [KUEHLEWIND]
               Kuehlewind, M. and B. Trammel, "The QUIC Latency Spin Bit
               (draft-ietf-quic-spin-exp-01)", October 2018,
               <https://tools.ietf.org/html/draft-ietf-quic-spin-exp-01>.
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 10]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
 
    [RFC6973]  Cooper, A., Tschofenig, H., Aboba, B., Petersen, J.,
               Morris, J., Hansen, M., and R. Smith, "Privacy
@@ -608,9 +557,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 11]
+Andersdotter & Sahib       Expires May 1, 2020                 [Page 10]
