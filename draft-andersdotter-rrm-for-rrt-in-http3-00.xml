@@ -159,7 +159,7 @@ in <xref target="illus4"/>.</t>
 
 <t>They will be dealt with in turn, identifying pitfalls and potential ways of addressing those pitfalls. The goal is to have better privacy-protecting properties while continuing to allow utility of the on-path observations in latency measurements.</t>
 
-<section anchor="reflection" title="Case 1: RRM at reflection/inversion">
+<section anchor="reflection" title="RRM at reflection/inversion">
 
   <t>The omission of a reflection or inversion creates difficulties. Namely, let's say the client omits the inversion in <xref target="illus4" />. Now there is no longer a spin edge so there is nothing to activate future reflections/inversions.</t>
 

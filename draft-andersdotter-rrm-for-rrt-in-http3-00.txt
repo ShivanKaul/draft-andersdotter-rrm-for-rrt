@@ -69,7 +69,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Randomized Response Mechanisms  . . . . . . . . . . . . . . .   2
    3.  Application to latency spin bit . . . . . . . . . . . . . . .   3
-     3.1.  Case 1: RRM at reflection/inversion . . . . . . . . . . .   6
+     3.1.  RRM at reflection/inversion . . . . . . . . . . . . . . .   6
        3.1.1.  Analysis: No reset and no edge identifying bit  . . .   6
        3.1.2.  Analysis: Reset and no edge identifying bit . . . . .   8
        3.1.3.  Analysis: An edge identifying bit . . . . . . . . . .   9
@@ -295,7 +295,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    privacy-protecting properties while continuing to allow utility of
    the on-path observations in latency measurements.
 
-3.1.  Case 1: RRM at reflection/inversion
+3.1.  RRM at reflection/inversion
 
    The omission of a reflection or inversion creates difficulties.
    Namely, let's say the client omits the inversion in Figure 5.  Now
