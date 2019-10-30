@@ -169,7 +169,7 @@ in <xref target="illus4"/>.</t>
 
   <t>If the ordinary spin edge is obfuscated by through omission of reflection/inversion, and the edge-identifying bit is also, with some probability, not correctly identifying an edge, the utility of having two latency bits again goes up at no additional loss of privacy.</t>
   
-<section anchor="example1" title="Analysis: No reset and no edge identifying bit">
+<section anchor="example1" title="No reset and no edge identifying bit">
     
 <t>The bit starts spinning with value v=1 in <xref target="illus2" />. At the point of reflection (see <xref target="illus3" />), it does not reflect with probability P. At the point of inversion (see <xref target="illus4" />), it does not invert with probability Q. We consider P and Q respectively to be the probability that the server or client does not behave in the way specified.</t> 
 
@@ -213,7 +213,7 @@ in <xref target="illus4"/>.</t>
 
   </section>
 
-    <section anchor="example2" title="Analysis: Reset and no edge identifying bit ">
+    <section anchor="example2" title="Reset and no edge identifying bit ">
     
 <t>The possible outcomes are as in <xref target="example1" />, and the problem to be resolved is that the spin edge eventually disappears with probability 1.</t>
 	
@@ -246,7 +246,7 @@ in <xref target="illus4"/>.</t>
 
     </section>
 
-        <section anchor="example3" title="Analysis: An edge identifying bit ">
+        <section anchor="example3" title="An edge identifying bit ">
     
 <t>The possible outcomes are as in <xref target="example1" />, and the problem to be resolved is that the spin edge eventually disappears with probability 1.</t>
 	
@@ -256,7 +256,7 @@ in <xref target="illus4"/>.</t>
 
     </section>
 
-      <section anchor="discussion1" title="Discussion: RRM at reflection/inversion">
+      <section anchor="discussion1" title="Discussion">
     
 	<t>In <xref target="example1" /> we saw that applying RRM at reflection and inversion could create a situation where the spin edge disappears. There are two parameters, P and Q, which are set by the client and server respectively.</t>
 
@@ -276,7 +276,7 @@ in <xref target="illus4"/>.</t>
 
   <t>Let us say any bit transmitted from either the client or the server is "off" in relation to what it proposed in the Spin Bit model with some probability Q. If Q = 0.5, the spinning bits will come across as a random 0s and 1s and it will be difficult to estimate any edge. However, if Q is less than 0.5, the spin edge can be estimated for instance by computing an average number of 0s or 1s in the past m ticks. For all averages above some cut-off rate, a measurement counter could be incremented by one. Eventually one would end up with a series (k'0, ..., k'n) that roughly corresponds to (k0, ..., kn) above.</t>
 
-  <section anchor="example4" title="Analysis: Client perturbation">
+  <section anchor="example4" title="Client perturbation">
     
 <t>The bit spins in the foreseen way. Every time a bit is transmitted, there is a probability Q that it holds a different value than it should. In <xref target="illus4" /> , either measurements station X or both stations Y observe a passing bit, as well as bits passing before or after that bit (if any). After observing 2k+1 bits (b[-k], ..., b[0], ..., b[k]) the true value of bit b[0] is estimated, for instance based on whether the majority of b[i] were v=0 or v=1. The estimated value is then used to increment a sequence counter.</t>
 
@@ -302,7 +302,7 @@ in <xref target="illus4"/>.</t>
 
   </section>
 
-<section anchor="example5" title="Analysis: Client and server perturbation">
+<section anchor="example5" title="Client and server perturbation">
 
   <t>Now let us consider the case where both the client and server randomize each transmitted bit, with probabilities Q and P respectively. Using the same assumptions as in <xref target="example4" /> and the same target RTT of 13, and letting Q=0.2 and P=0.1, we may end up measuring 0000000000000111111111011100000001010001111010011111 and throw the method of moving windows for k=2 arriving at 000000000001111111111111000000000000011111001111 leaving us with sequences of length (11, 13, 13, 5, 2, 4).</t>
 
@@ -310,7 +310,7 @@ in <xref target="illus4"/>.</t>
   
 </section>
 
-<section anchor="discussion2" title="Discussion: RRM at each bit">
+<section anchor="discussion2" title="Discussion">
 
   <t>In the introduction to this section, we observed that setting Q=0.5 would make any pattern recognition among the bits extremely difficult for the most advanced of filters. We proceeded to discuss the case Q=0.2 and a potential filter for this case in <xref target="example4" />. If Q is taken to be a parameter under client control, of course the client could set Q so that latency measurements are made impossible. On the other hand, such client control already exists, since the latency spin bit is optional. (see <xref target="RFC6973">Sec. 7.2</xref> and <xref target="I-D-QUIC">Section 17.3.1</xref>). </t>
 

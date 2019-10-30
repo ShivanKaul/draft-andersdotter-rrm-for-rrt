@@ -70,14 +70,14 @@ Table of Contents
    2.  Randomized Response Mechanisms  . . . . . . . . . . . . . . .   2
    3.  Application to latency spin bit . . . . . . . . . . . . . . .   3
      3.1.  RRM at reflection/inversion . . . . . . . . . . . . . . .   6
-       3.1.1.  Analysis: No reset and no edge identifying bit  . . .   6
-       3.1.2.  Analysis: Reset and no edge identifying bit . . . . .   8
-       3.1.3.  Analysis: An edge identifying bit . . . . . . . . . .   9
-       3.1.4.  Discussion: RRM at reflection/inversion . . . . . . .  10
+       3.1.1.  No reset and no edge identifying bit  . . . . . . . .   6
+       3.1.2.  Reset and no edge identifying bit . . . . . . . . . .   8
+       3.1.3.  An edge identifying bit . . . . . . . . . . . . . . .   9
+       3.1.4.  Discussion  . . . . . . . . . . . . . . . . . . . . .  10
      3.2.  RRM at each bit . . . . . . . . . . . . . . . . . . . . .  10
-       3.2.1.  Analysis: Client perturbation . . . . . . . . . . . .  11
-       3.2.2.  Analysis: Client and server perturbation  . . . . . .  12
-       3.2.3.  Discussion: RRM at each bit . . . . . . . . . . . . .  12
+       3.2.1.  Client perturbation . . . . . . . . . . . . . . . . .  11
+       3.2.2.  Client and server perturbation  . . . . . . . . . . .  12
+       3.2.3.  Discussion  . . . . . . . . . . . . . . . . . . . . .  12
    4.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .  13
    5.  Informative References  . . . . . . . . . . . . . . . . . . .  13
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
@@ -323,7 +323,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    probability, not correctly identifying an edge, the utility of having
    two latency bits again goes up at no additional loss of privacy.
 
-3.1.1.  Analysis: No reset and no edge identifying bit
+3.1.1.  No reset and no edge identifying bit
 
    The bit starts spinning with value v=1 in Figure 3.  At the point of
    reflection (see Figure 4), it does not reflect with probability P.
@@ -415,7 +415,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    inversion.  For any Q > 0, this process will eventually end up in a
    sink.
 
-3.1.2.  Analysis: Reset and no edge identifying bit
+3.1.2.  Reset and no edge identifying bit
 
    The possible outcomes are as in Section 3.1.1, and the problem to be
    resolved is that the spin edge eventually disappears with probability
@@ -474,7 +474,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    burdensome for an on-path observer in cases where latencies are a
    priori expected to be large.
 
-3.1.3.  Analysis: An edge identifying bit
+3.1.3.  An edge identifying bit
 
    The possible outcomes are as in Section 3.1.1, and the problem to be
    resolved is that the spin edge eventually disappears with probability
@@ -506,7 +506,7 @@ Andersdotter & Sahib       Expires May 1, 2020                  [Page 9]
 Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
-3.1.4.  Discussion: RRM at reflection/inversion
+3.1.4.  Discussion
 
    In Section 3.1.1 we saw that applying RRM at reflection and inversion
    could create a situation where the spin edge disappears.  There are
@@ -566,7 +566,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    with a series (k'0, ..., k'n) that roughly corresponds to (k0, ...,
    kn) above.
 
-3.2.1.  Analysis: Client perturbation
+3.2.1.  Client perturbation
 
    The bit spins in the foreseen way.  Every time a bit is transmitted,
    there is a probability Q that it holds a different value than it
@@ -633,7 +633,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    (10+14+14+10)/4=12.  This is much better precision if the target
    round-trip time estimation is 13.
 
-3.2.2.  Analysis: Client and server perturbation
+3.2.2.  Client and server perturbation
 
    Now let us consider the case where both the client and server
    randomize each transmitted bit, with probabilities Q and P
@@ -652,7 +652,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    the greatest length as a basis for the latency calculations, we would
    have (11+13+13)/3=12.3 as the estimator for the RTT.
 
-3.2.3.  Discussion: RRM at each bit
+3.2.3.  Discussion
 
    In the introduction to this section, we observed that setting Q=0.5
    would make any pattern recognition among the bits extremely difficult
