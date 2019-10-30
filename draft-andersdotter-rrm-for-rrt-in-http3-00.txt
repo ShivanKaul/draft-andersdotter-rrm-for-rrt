@@ -77,6 +77,9 @@ Table of Contents
      3.2.  RRM at each bit . . . . . . . . . . . . . . . . . . . . .  10
        3.2.1.  Analysis: Estimating true values of a bit, client
                perturbation  . . . . . . . . . . . . . . . . . . . .  10
+       3.2.2.  Analysis: Estimating true values of a bit, client and
+               server perturbation . . . . . . . . . . . . . . . . .  11
+       3.2.3.  Discussion: RRM at each bit . . . . . . . . . . . . .  12
    4.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .  12
    5.  Informative References  . . . . . . . . . . . . . . . . . . .  13
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
@@ -102,9 +105,6 @@ Table of Contents
    it can either "truthfully" report its value as what it should be
    according to [TRAMMEL], or it could, at some known rate or
    probability, report the opposite value.
-
-
-
 
 
 
@@ -602,8 +602,8 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    (10+14+14+10)/4=12.  This is much better precision if the target
    round-trip time estimation is 13.
 
-3.2.1.1.  Analysis: Estimating true values of a bit, client and server
-          perturbation
+3.2.2.  Analysis: Estimating true values of a bit, client and server
+        perturbation
 
    Now let us consider the case where both the client and server
    randomize each transmitted bit, with probabilities Q and P
@@ -630,7 +630,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    the greatest length as a basis for the latency calculations, we would
    have (11+13+13)/3=12.3 as the estimator for the RTT.
 
-3.2.1.2.  Discussion: RRM at each bit
+3.2.3.  Discussion: RRM at each bit
 
    In the introduction to this section, we observed that setting Q=0.5
    would make any pattern recognition among the bits extremely difficult
@@ -642,7 +642,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    spin bit is optional. (see Sec. 7.2 [RFC6973] and Section 17.3.1
    [I-D-QUIC]).
 
-   In Section 3.2.1.1 we introduced the possiblity of yet another
+   In Section 3.2.2 we introduced the possiblity of yet another
    parameter P, to be set by the server for determining server-side RRM
    application.  The moving windows filtering method applied to make
    sense of on-path observations remains the same.
@@ -685,7 +685,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    would be to simply to turn the spin bit off.  Setting Q < 0.5 would
    instead let the client make it easier or more difficult for the on-
    path observer to correctly estimate latency.  In Section 3.2.1 and
-   Section 3.2.1.1 we particularly conclude that under-estimation of
+   Section 3.2.2 we particularly conclude that under-estimation of
    latency is the most likely outcome of this RRM.
 
    It is not clear that RRM would ultimately bring any particular

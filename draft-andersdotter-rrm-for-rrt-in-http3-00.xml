@@ -297,6 +297,8 @@ in <xref target="illus4"/>.</t>
 
 <t>Applying the procedure we are left with 000000000011111111111111000000000011111111111111, or (10+14+14+10)/4=12. This is much better precision if the target round-trip time estimation is 13.</t> 
 
+  </section>
+
 <section anchor="example5" title="Analysis: Estimating true values of a bit, client and server perturbation">
 
   <t>Now let us consider the case where both the client and server randomize each transmitted bit, with probabilities Q and P respectively. Using the same assumptions as in <xref target="example4" /> and the same target RTT of 13, and letting Q=0.2 and P=0.1, we may end up measuring 0000000000000111111111011100000001010001111010011111 and throw the method of moving windows for k=2 arriving at 000000000001111111111111000000000000011111001111 leaving us with sequences of length (11, 13, 13, 5, 2, 4).</t>
@@ -317,8 +319,6 @@ in <xref target="illus4"/>.</t>
 
 </section>
   
-</section>
-
 </section>
 
 <section anchor="conclusion" title="Conclusion">

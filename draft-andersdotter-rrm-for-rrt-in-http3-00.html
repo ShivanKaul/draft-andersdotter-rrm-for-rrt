@@ -384,6 +384,8 @@
 <link href="#rfc.section.3.1.4" rel="Chapter" title="3.1.4 Discussion: Reflection/inversion">
 <link href="#rfc.section.3.2" rel="Chapter" title="3.2 RRM at each bit">
 <link href="#rfc.section.3.2.1" rel="Chapter" title="3.2.1 Analysis: Estimating true values of a bit, client perturbation">
+<link href="#rfc.section.3.2.2" rel="Chapter" title="3.2.2 Analysis: Estimating true values of a bit, client and server perturbation">
+<link href="#rfc.section.3.2.3" rel="Chapter" title="3.2.3 Discussion: RRM at each bit">
 <link href="#rfc.section.4" rel="Chapter" title="4 Conclusion">
 <link href="#rfc.references" rel="Chapter" title="5 Informative References">
 <link href="#rfc.authors" rel="Chapter">
@@ -468,6 +470,10 @@
 </ul><li>3.2.   <a href="#rfc.section.3.2">RRM at each bit</a>
 </li>
 <ul><li>3.2.1.   <a href="#rfc.section.3.2.1">Analysis: Estimating true values of a bit, client perturbation</a>
+</li>
+<li>3.2.2.   <a href="#rfc.section.3.2.2">Analysis: Estimating true values of a bit, client and server perturbation</a>
+</li>
+<li>3.2.3.   <a href="#rfc.section.3.2.3">Discussion: RRM at each bit</a>
 </li>
 </ul></ul><li>4.   <a href="#rfc.section.4">Conclusion</a>
 </li>
@@ -672,23 +678,23 @@
 <p id="rfc.section.3.2.1.p.7">Set Q=0.2. Now the four RTTs may instead be measured as 1001000000100111111001111100000010010110111011010111. With this sequence, we would instead estimate (1+2+1+6+1+2+6+2+5+6+1+2+ 1+1+2+1+3+1+2+1+1+1+3)/23 = 2.26. That is clearly not satisfactory if the target round-trip time estimation is 13.</p>
 <p id="rfc.section.3.2.1.p.8">Divide the RTT measurements into moving windows with k=2 (i.e., each window contains (b[-2], b[-1], b[0], b[1], b[2])) to arrive at [(10010), (00100), (01000), (10000), (00000), (00000), (00001), (00010), (00100), etc]. Each window estimates b[0], so the "true" value of bit 2 will be estimated by (10010), the true value of bit three from (00100), and so forth.</p>
 <p id="rfc.section.3.2.1.p.9">Applying the procedure we are left with 000000000011111111111111000000000011111111111111, or (10+14+14+10)/4=12. This is much better precision if the target round-trip time estimation is 13.</p>
-<h1 id="rfc.section.3.2.1.1">
-<a href="#rfc.section.3.2.1.1">3.2.1.1.</a> <a href="#example5" id="example5">Analysis: Estimating true values of a bit, client and server perturbation</a>
+<h1 id="rfc.section.3.2.2">
+<a href="#rfc.section.3.2.2">3.2.2.</a> <a href="#example5" id="example5">Analysis: Estimating true values of a bit, client and server perturbation</a>
 </h1>
-<p id="rfc.section.3.2.1.1.p.1">Now let us consider the case where both the client and server randomize each transmitted bit, with probabilities Q and P respectively. Using the same assumptions as in <a href="#example4" class="xref">Section 3.2.1</a> and the same target RTT of 13, and letting Q=0.2 and P=0.1, we may end up measuring 0000000000000111111111011100000001010001111010011111 and throw the method of moving windows for k=2 arriving at 000000000001111111111111000000000000011111001111 leaving us with sequences of length (11, 13, 13, 5, 2, 4).</p>
-<p id="rfc.section.3.2.1.1.p.2">As previously mentioned, the risk of a bit being misidentified is related to P, Q and k. Because a misidentified bit always make sequences appear to be of shorter length, the sequences that measure greater length should be taken as the RTT estimate. In this event that we choose to only use that half of the esimated sequences with the greatest length as a basis for the latency calculations, we would have (11+13+13)/3=12.3 as the estimator for the RTT.</p>
-<h1 id="rfc.section.3.2.1.2">
-<a href="#rfc.section.3.2.1.2">3.2.1.2.</a> <a href="#discussion2" id="discussion2">Discussion: RRM at each bit</a>
+<p id="rfc.section.3.2.2.p.1">Now let us consider the case where both the client and server randomize each transmitted bit, with probabilities Q and P respectively. Using the same assumptions as in <a href="#example4" class="xref">Section 3.2.1</a> and the same target RTT of 13, and letting Q=0.2 and P=0.1, we may end up measuring 0000000000000111111111011100000001010001111010011111 and throw the method of moving windows for k=2 arriving at 000000000001111111111111000000000000011111001111 leaving us with sequences of length (11, 13, 13, 5, 2, 4).</p>
+<p id="rfc.section.3.2.2.p.2">As previously mentioned, the risk of a bit being misidentified is related to P, Q and k. Because a misidentified bit always make sequences appear to be of shorter length, the sequences that measure greater length should be taken as the RTT estimate. In this event that we choose to only use that half of the esimated sequences with the greatest length as a basis for the latency calculations, we would have (11+13+13)/3=12.3 as the estimator for the RTT.</p>
+<h1 id="rfc.section.3.2.3">
+<a href="#rfc.section.3.2.3">3.2.3.</a> <a href="#discussion2" id="discussion2">Discussion: RRM at each bit</a>
 </h1>
-<p id="rfc.section.3.2.1.2.p.1">In the introduction to this section, we observed that setting Q=0.5 would make any pattern recognition among the bits extremely difficult for the most advanced of filters. We proceeded to discuss the case Q=0.2 and a potential filter for this case in <a href="#example4" class="xref">Section 3.2.1</a>. If Q is taken to be a parameter under client control, of course the client could set Q so that latency measurements are made impossible. On the other hand, such client control already exists, since the latency spin bit is optional. (see <a href="#RFC6973" class="xref">Sec. 7.2</a> and <a href="#I-D-QUIC" class="xref">Section 17.3.1</a>). </p>
-<p id="rfc.section.3.2.1.2.p.2">In <a href="#example5" class="xref">Section 3.2.1.1</a> we introduced the possiblity of yet another parameter P, to be set by the server for determining server-side RRM application. The moving windows filtering method applied to make sense of on-path observations remains the same.</p>
-<p id="rfc.section.3.2.1.2.p.3">The filtering methods applied in this section consistently under-estimate the true latency. More accurate latency measurements may be achieved by having a larger number of sequences observed.</p>
+<p id="rfc.section.3.2.3.p.1">In the introduction to this section, we observed that setting Q=0.5 would make any pattern recognition among the bits extremely difficult for the most advanced of filters. We proceeded to discuss the case Q=0.2 and a potential filter for this case in <a href="#example4" class="xref">Section 3.2.1</a>. If Q is taken to be a parameter under client control, of course the client could set Q so that latency measurements are made impossible. On the other hand, such client control already exists, since the latency spin bit is optional. (see <a href="#RFC6973" class="xref">Sec. 7.2</a> and <a href="#I-D-QUIC" class="xref">Section 17.3.1</a>). </p>
+<p id="rfc.section.3.2.3.p.2">In <a href="#example5" class="xref">Section 3.2.2</a> we introduced the possiblity of yet another parameter P, to be set by the server for determining server-side RRM application. The moving windows filtering method applied to make sense of on-path observations remains the same.</p>
+<p id="rfc.section.3.2.3.p.3">The filtering methods applied in this section consistently under-estimate the true latency. More accurate latency measurements may be achieved by having a larger number of sequences observed.</p>
 <h1 id="rfc.section.4">
 <a href="#rfc.section.4">4.</a> <a href="#conclusion" id="conclusion">Conclusion</a>
 </h1>
 <p id="rfc.section.4.p.1">The spin bit is associated with an IP address which creates linkability (see <a href="#RFC6973" class="xref">[RFC6973]</a> and <a href="#RFC8280" class="xref">[RFC8280]</a>). The privacy concern associated with a spin bit is, additionally, that latency measurements will enable inferrence of the location or distance of the device associated with that particular IP address.</p>
 <p id="rfc.section.4.p.2">In <a href="#example1" class="xref">Section 3.1.1</a>, it was seen Randomized response mechanisms (RRM) would either cause the utility of the spin bit to disappear entirely (by rendering any measurement futile) or cause the primary privacy-reducing inferrence to remain a problem, as long as a sufficiently large amount sequential measurements were done. Each measurement would continue to be tied to fixed identifier, which necessarily implies privacy loss. Interestingly, <a href="#example1" class="xref">Section 3.1.1</a> also highlights fundamental trade-offs between privacy-preserving mechanisms and measurement utility: by setting Q=0, we were able to avoid ending up in a sink, which would improve the possibility of measurement, but in doing so removed all agency from the client to falsify its responses.</p>
-<p id="rfc.section.4.p.3">In <a href="#example4" class="xref">Section 3.2.1</a> we saw that setting Q=0.5 could obfuscate the spin edge from an on-path observer. Since the latency spin bit is an optional feature, an easier method of accomplishing such obfuscation would be to simply to turn the spin bit off. Setting Q &lt; 0.5 would instead let the client make it easier or more difficult for the on-path observer to correctly estimate latency. In <a href="#example4" class="xref">Section 3.2.1</a> and <a href="#example5" class="xref">Section 3.2.1.1</a> we particularly conclude that under-estimation of latency is the most likely outcome of this RRM.</p>
+<p id="rfc.section.4.p.3">In <a href="#example4" class="xref">Section 3.2.1</a> we saw that setting Q=0.5 could obfuscate the spin edge from an on-path observer. Since the latency spin bit is an optional feature, an easier method of accomplishing such obfuscation would be to simply to turn the spin bit off. Setting Q &lt; 0.5 would instead let the client make it easier or more difficult for the on-path observer to correctly estimate latency. In <a href="#example4" class="xref">Section 3.2.1</a> and <a href="#example5" class="xref">Section 3.2.2</a> we particularly conclude that under-estimation of latency is the most likely outcome of this RRM.</p>
 <p id="rfc.section.4.p.4">It is not clear that RRM would ultimately bring any particular privacy benefit beyond what is already guaranteed in the present specification of the spin bit in <a href="#I-D-QUIC" class="xref">Section 17.3.1</a>. A possible option is to allow a client to set a randomization value P in such a way that it could be close to 0.5, in the case where each bit is always RRM-protected. Then the client would have the option of avoiding latency measurements entirely.</p>
 <h1 id="rfc.references">
 <a href="#rfc.references">5.</a> Informative References</h1>
