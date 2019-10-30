@@ -15,14 +15,14 @@ Expires: May 1, 2020                                          Salesforce
 Abstract
 
    The latency spin bit is an optional feature included in
-   Section 17.3.1 [I-D-QUIC].  It enables passive latency monitoring
-   from observations made on the network path throughout the duration of
-   a connection.  This draft presents the results of an inquiry into the
-   potential of using randomized response mechanism (RRM) to enhance
-   privacy gain in latency measurements.  It concludes that RRM could be
-   used to introduce choice for web browser clients in preserving
-   privacy in latency measurements, but only at the cost of losing the
-   utility of the latency measurements.
+   Section 17.3.1 [I-D-QUIC].  It enables passive, on-path observations
+   for estimation of latency.  This draft presents the results of an
+   inquiry into the potential of using randomized response mechanisms
+   (RRM) to reduce privacy loss in latency measurements.  It concludes
+   that RRM could be used to introduce choice for web browser clients in
+   preserving privacy in latency measurements, but that the trade-offs,
+   especially since the latency spin bit is already option, do not
+   favour RRM.
 
 Status of This Memo
 
