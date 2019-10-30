@@ -46,7 +46,7 @@
 
     <abstract>
 
-<t>The Latency Spin Bit is an optional feature included in <xref target="I-D-QUIC">Section 17.3.1</xref>. It enables passive latency monitoring from observations made on the network path throughout the duration of a connection. This draft presents the results of an inquiry into the potential of using randomized response mechanism (RRM) to enhance privacy gain in latency measurements. It concludes that RRM could be used to introduce choice for web browser clients in preserving privacy in latency measurements, but only at the cost of losing the utility of the latency measurements.</t>
+<t>The latency spin bit is an optional feature included in <xref target="I-D-QUIC">Section 17.3.1</xref>. It enables passive latency monitoring from observations made on the network path throughout the duration of a connection. This draft presents the results of an inquiry into the potential of using randomized response mechanism (RRM) to enhance privacy gain in latency measurements. It concludes that RRM could be used to introduce choice for web browser clients in preserving privacy in latency measurements, but only at the cost of losing the utility of the latency measurements.</t>
 
     </abstract>
 
@@ -58,10 +58,8 @@
 
 <section anchor="introduction" title="Introduction">
 
-<t>At the IETF104 convening of the Privacy Enhancements and (PEA) Research Group, a presentation on Differential Privacy (<xref target="AA-CL"/>) gave rise to the idea of trying to apply Randomized Response methods to the QUIC Spin Bit described in <xref target="TRAMMEL"/> and <xref target="KUEHLEWIND"/>. The QUIC Spin Bit had generated controversy from a privacy perspective, both in the Working Group meetings and on e-mailing lists and been re-ignited through the publication of a subsequent Human Rights Consideration in <xref target="TENOEVER-MARTINI"/>. 
+<t>At the IETF104 convening of the Privacy Enhancements and (PEA) Research Group, a presentation on Differential Privacy (<xref target="AA-CL"/>) gave rise to the idea of trying to apply Randomized Response methods to the QUIC Spin Bit described in <xref target="TRAMMEL"/> and <xref target="KUEHLEWIND"/>. Now incorporated in <xref target="I-D-QUIC">Section 17.3.1</xref>, the latency spin bit has generated controversy from a privacy perspective, both in the Working Group meetings and on e-mailing lists. Controversies were re-ignited through the publication of a Human Rights Consideration in <xref target="TENOEVER-MARTINI"/>. Applying RRM is an attempt to address two problems: the privacy loss incurred through the spin bit, and considering the potential of using RRM to have more than one bit assisting in latency measurement as per previous proposals.
 </t>
-
-<t>Randomized response trials were originally created for binary environments: if a series of measurements has only two possible outcomes (0 or 1, yes or no, true or false, for instance), it is the idea that allowing individual respondents to answer "falsely" at a predictable rate will still preserve the ability to make inferences on the entire set of respondents. The Spin Bit, being a bit, is binary outcome variable. Each time it is measured, the idea is that it can either "truthfully" report its value as what it should be according to <xref target="TRAMMEL"/>, or it could, at some known rate or probability, report the opposite value.</t>
 
 </section>
 
@@ -69,17 +67,19 @@
 
   <t>Randomized Response Mechanisms (RRM) rely on the ability to make sense of data with known errors and were originally developed to facilitate surveys on sensitive topics such as alcohol or drug abuse, or political affiliation. The design allows a survey taker to provide, with some known probability P, a "false" answer ("yes" instead of "no", for example) to a survey question. It is meant to encourage truthful answers even in surveys where participants may otherwise feel compelled to give false answers.</t>
 
-  <t>RRMs are most easily illustrated for binary response problems. Let's take as an example "Did you go to the last IETF meeting?" The answer to this question is either yes or no. If 30% of all responses are known to be false, we have four categories of responses: true yes, true no, false yes and false no. From these numbers we can estimate the proportion of recurring visitors to the IETF.</t>
+<t>Randomized response trials were originally created for binary environments: if a series of measurements have only two possible outcomes (0 or 1, yes or no, true or false, for instance), it is the idea that allowing individual respondents to answer "falsely" at a predictable rate will still preserve the ability to make inferences on the entire set of respondents. The latency spin bit, being a bit, is binary outcome variable. Each time it is measured, the idea is that it can either "truthfully" report its value as what it should be according to <xref target="TRAMMEL"/>, or it could, at some known rate or probability, report the opposite value.</t>
+  
+<t>RRMs are easily illustrated for binary response problems. Let's take as an example "Did you go to the last IETF meeting?" The answer to this question is either yes or no. Let us suppose that 25% of all responses are known to be false, and that 80% of all respondents answered yes. Then 60% of the respondents who answered yes can be assumed to have done so truthfully, while 5% of the respondents who answered no have done so falsely. 65% of the respondents can therefore be esimated to have actually attended the last IETF meeting.</t>
 
   <t>RRMs can also be applied to multiple choice questions. Estimation of true proportions becomes more difficult as the number of possible answers per question goes up. Further examples, including formulas and calculations, can be found in <xref target="DWORK"/> and <xref target="FOX"/>.</t>
   
 </section>
 
-<section anchor="asb" title="Application to Spin Bit">
+<section anchor="asb" title="Application to latency spin bit">
 
-<t>As described in <xref target="TRAMMEL"/>, the Spin Bit is a mechanism for measuring round-trip-times (RTT) in the QUIC protocol. Its operation is captured by the following five images, extracted from this draft:</t>
+<t>As described in <xref target="TRAMMEL"/>, the latency spin bit is a mechanism for measuring round-trip-times (RTT) in the QUIC protocol. The investigation in this draft relies on <xref target="TRAMMEL"/> for its understanding of the basic operation of the latency spin bit, and in particular the following paragraphs and figures from the draft are quoted to facilitate the description of RRM below:</t>
 
-<t>Initially, during connection establishment, no packets with a spin bit are in flight, as shown in <xref target="illus0"/>.</t>
+<t>[Begin quote] Initially, during connection establishment, no packets with a spin bit are in flight, as shown in <xref target="illus0"/>.</t>
 
 <figure title="Initial state, no spin bit between client and server" anchor="illus0"><artwork><![CDATA[
 +--------+   -  -  -  -  -   +--------+
@@ -138,6 +138,8 @@ in <xref target="illus4"/>.</t>
 +--------+   1  1  1  1  1   +--------+
                       Y
 ]]></artwork></figure>
+
+<t>[End quote]</t>
 
 <t> In each iteration of <xref target="illus3" />-<xref target="illus4" /> the a sequence of 0s or 1s the length of which is k0 for iteration 0, k1 for iteration 1, and so forth, can be measured (by X or Y in the picture). The length of each sequence equals the amount of ticks required to pass from the client back to the client. After n iterations, an average can be taken of the measurements (k0, ..., kn). This average can be multiplied by the amount of time per tick (a quantity which is assumed to be known) to get a value for the round-trip time (RTT).</t>
 
