@@ -14,15 +14,15 @@ Expires: May 1, 2020                                          Salesforce
 
 Abstract
 
-   The latency spin bit is an optional feature included in
-   Section 17.3.1 [I-D-QUIC].  It enables passive, on-path observations
-   for estimation of latency.  This draft presents the results of an
-   inquiry into the potential of using randomized response mechanisms
-   (RRM) to reduce privacy loss in latency measurements.  It concludes
-   that RRM could be used to introduce choice for web browser clients in
-   preserving privacy in latency measurements, but that the trade-offs,
-   especially since the latency spin bit is already option, do not
-   favour RRM.
+   The latency spin bit is an optional feature included in the QUIC
+   transport protocol [I-D-QUIC].  It enables passive, on-path
+   observations for estimation of latency.  This document presents the
+   results of an inquiry into the potential of using randomized response
+   mechanisms (RRM) to reduce privacy loss in latency measurements.  It
+   concludes that RRM could be used to introduce choice for web browser
+   clients in preserving privacy in latency measurements, but that the
+   trade-offs, especially since the latency spin bit is already option,
+   do not favour RRM.
 
 Status of This Memo
 
@@ -84,28 +84,28 @@ Table of Contents
 
 1.  Introduction
 
-   At the IETF104 convening of the Privacy Enhancements and (PEA)
-   Research Group, a presentation on Differential Privacy ([AA-CL]) gave
-   rise to the idea of trying to apply Randomized Response methods to
-   the QUIC Spin Bit described in [TRAMMEL] and [KUEHLEWIND].  Now
-   incorporated in Section 17.3.1 [I-D-QUIC], the latency spin bit has
-   generated controversy from a privacy perspective, both in the Working
-   Group meetings and on e-mailing lists.  Controversies were re-ignited
-   through the publication of a Human Rights Consideration in
-   [TENOEVER-MARTINI].  Applying RRM is an attempt to address two
-   problems: the privacy loss incurred through the spin bit, and
-   considering the potential of using RRM to have more than one bit
-   assisting in latency measurement as per previous proposals.
+   At the IETF104 convening of the Privacy Enhancements and Assessments
+   Research Group (PEARG), a presentation on Differential Privacy
+   ([AA-CL]) gave rise to the idea of trying to apply Randomized
+   Response methods to the QUIC Spin Bit described in [TRAMMEL] and
+   [KUEHLEWIND].  Now incorporated in Section 17.3.1 [I-D-QUIC], the
+   latency spin bit has generated controversy from a privacy
+   perspective, both in the Working Group meetings and on e-mailing
+   lists.  Controversies were re-ignited through the publication of a
+   Human Rights Consideration in [TENOEVER-MARTINI].  Applying RRM is an
+   attempt to address two problems: the privacy loss incurred through
+   the spin bit, and considering the potential of using RRM to have more
+   than one bit assisting in latency measurement as per previous
+   proposals.
 
 2.  Randomized Response Mechanisms
 
    Randomized Response Mechanisms (RRM) rely on the ability to make
    sense of data with known errors and were originally developed to
-   facilitate surveys on sensitive topics such as alcohol or drug abuse,
+   facilitate surveys on sensitive topics such as alcohol or drug abuse
    or political affiliation.  The design allows a survey taker to
    provide, with some known probability P, a "false" answer ("yes"
    instead of "no", for example) to a survey question.  It is meant to
-
 
 
 
@@ -147,10 +147,10 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
    As described in [TRAMMEL], the latency spin bit is a mechanism for
    measuring round-trip-times (RTT) in the QUIC protocol.  The
-   investigation in this draft relies on [TRAMMEL] for its understanding
-   of the basic operation of the latency spin bit, and in particular the
-   following paragraphs and figures from the draft are quoted to
-   facilitate the description of RRM below:
+   investigation in this document relies on [TRAMMEL] for its
+   understanding of the basic operation of the latency spin bit, and in
+   particular the following paragraphs and figures from the document are
+   quoted to facilitate the description of RRM below:
 
    [Begin quote] Initially, during connection establishment, no packets
    with a spin bit are in flight, as shown in Figure 1.

@@ -2,10 +2,12 @@ class Server(object):
 	def __init__(self, initial_spin):
 		self._curSpin = initial_spin 
 
+	# getter
 	@property
 	def curSpin(self):
 		return self._curSpin
 
+	# setter
 	@curSpin.setter
 	def curSpin(self, value):
 		# reflects
@@ -16,11 +18,13 @@ class Client(object):
 		self._curSpin = initial_spin 
 		self._probability = probability
 
+	# getter
 	@property
 	def curSpin(self):
 		# TODO: Lie with probability
 		return self._curSpin
 
+	# setter - this is what inverts the spin
 	@curSpin.setter
 	def curSpin(self, curSpin):
 		# invert
@@ -30,7 +34,7 @@ class Client(object):
 class Path:
 	def __init__(self, maxSize):
 		self._maxSize = maxSize
-		# a list of Nones of size maxSize
+		# a list of Nones of size maxSize to begin with
 		self._path = [None for x in range(maxSize)]
 		self.curIndex = 0
 
@@ -45,6 +49,11 @@ class Path:
 	def getValueAtIndex(self, index):
 		return self._path[index]
 
+	# bug here :( - this is basically maintaining a path. 
+	# every time the path is full we add new value 
+	# to curIndex % totalSize.
+	# Also if the path is full then we must 'pop' an element
+	# that will be fed into a client/server
 	def addValueToPath(self, value):
 		if self.curIndex >= self._maxSize:
 			popped = self._path[-1]
@@ -70,6 +79,7 @@ class Observer:
 		midpt = path.maxSize // 2
 		num = path.getValueAtIndex(midpt)
 		if num != None:
+			# the path might not be full yet
 			self.measurements.append(num)
 
 
@@ -88,7 +98,7 @@ def runSimulation(P, Q, lengthOfPath, totalTicks):
 		bitReachingServer = clientToServerPath.addValueToPath(client.curSpin)
 		bitReachingClient = serverToClientPath.addValueToPath(server.curSpin)
 		if bitReachingServer != None:
-			print(ticks, bitReachingServer)
+			# DEBUG code: print(ticks, bitReachingServer)
 			server.curSpin = bitReachingServer
 		if bitReachingClient != None:
 			client.curSpin = bitReachingClient
