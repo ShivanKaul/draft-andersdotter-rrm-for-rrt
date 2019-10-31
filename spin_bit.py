@@ -49,19 +49,11 @@ class Path:
 	def getValueAtIndex(self, index):
 		return self._path[index]
 
-	# bug here :( - this is basically maintaining a path. 
-	# every time the path is full we add new value 
-	# to curIndex % totalSize.
-	# Also if the path is full then we must 'pop' an element
-	# that will be fed into a client/server
+	# This is basically maintaining a path. 
 	def addValueToPath(self, value):
-		if self.curIndex >= self._maxSize:
-			popped = self._path[-1]
-		else:
-			popped = None
 		self._path[self.curIndex % self._maxSize] = value
 		self.curIndex += 1
-		return popped
+		return self._path[-1]
 
 
 class Observer:
@@ -97,6 +89,8 @@ def runSimulation(P, Q, lengthOfPath, totalTicks):
 	while (ticks < totalTicks):
 		bitReachingServer = clientToServerPath.addValueToPath(client.curSpin)
 		bitReachingClient = serverToClientPath.addValueToPath(server.curSpin)
+
+		# set value for next tick
 		if bitReachingServer != None:
 			# DEBUG code: print(ticks, bitReachingServer)
 			server.curSpin = bitReachingServer
