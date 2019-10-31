@@ -46,7 +46,7 @@
 
     <abstract>
 
-<t>The latency spin bit is an optional feature included in <xref target="I-D-QUIC">Section 17.3.1</xref>. It enables passive, on-path observations for estimation of latency. This draft presents the results of an inquiry into the potential of using randomized response mechanisms (RRM) to reduce privacy loss in latency measurements. It concludes that RRM could be used to introduce choice for web browser clients in preserving privacy in latency measurements, but that the trade-offs, especially since the latency spin bit is already option, do not favour RRM.</t>
+<t>The latency spin bit is an optional feature included in the <xref target="I-D-QUIC">QUIC transport protocol</xref>. It enables passive, on-path observations for estimation of latency. This document presents the results of an inquiry into the potential of using randomized response mechanisms (RRM) to reduce privacy loss in latency measurements. It concludes that RRM could be used to introduce choice for web browser clients in preserving privacy in latency measurements, but that the trade-offs, especially since the latency spin bit is already option, do not favour RRM.</t>
 
     </abstract>
 
@@ -77,7 +77,7 @@
 
 <section anchor="asb" title="Application to latency spin bit">
 
-<t>As described in <xref target="TRAMMEL"/>, the latency spin bit is a mechanism for measuring round-trip-times (RTT) in the QUIC protocol. The investigation in this draft relies on <xref target="TRAMMEL"/> for its understanding of the basic operation of the latency spin bit, and in particular the following paragraphs and figures from the draft are quoted to facilitate the description of RRM below:</t>
+<t>As described in <xref target="TRAMMEL"/>, the latency spin bit is a mechanism for measuring round-trip-times (RTT) in the QUIC protocol. The investigation in this document relies on <xref target="TRAMMEL"/> for its understanding of the basic operation of the latency spin bit, and in particular the following paragraphs and figures from the document are quoted to facilitate the description of RRM below:</t>
 
 <t>[Begin quote] Initially, during connection establishment, no packets with a spin bit are in flight, as shown in <xref target="illus0"/>.</t>
 
