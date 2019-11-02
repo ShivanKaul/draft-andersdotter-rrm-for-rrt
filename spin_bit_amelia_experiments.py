@@ -2,8 +2,9 @@ import time
 import random as rd
 
 class Server(object):
-    def __init__(self, initial_spin):
-        self._curSpin = initial_spin 
+    def __init__(self, initial_spin, probability):
+        self._curSpin = initial_spin
+        self._probability = probability
 
     # getter
     @property
@@ -68,20 +69,22 @@ class Observer:
     def measureRTT(self):
         print("Final RTT is")
         a = self.measurements
-        b = []
-        ca = 0
-        cb = 0
+        badCounterVector = []
+        counterOfOnes = 0
+        counterOfZeros = 0
         for i in range(len(a)):
             if a[i] == 1:
-                ca = ca+1
-                b.append(cb)
-                cb = 0
+                counterOfOnes = counterOfOnes+1
+                badCounterVector.append(counterOfZeros)
+                counterOfZeros = 0
             else:
-                cb = cb +1 
-                b.append(ca)
-                ca = 0
-        c = [x for x in b if x!=0]
-        return sum(c)/len(c) # not implemented yet
+                counterOfZeros = counterOfZeros + 1 
+                badCounterVector.append(counterOfOnes)
+                counterOfOnes = 0
+        cleanCounterVector = [x for x in badCounterVector if x!=0]
+        # removing first value in cleanCounterVector since it only
+        # contains half a RTT in either case.
+        return sum(cleanCounterVector[1:])/len(cleanCounterVector[1:]) # not implemented yet
 
     def addMeasurement(self, path):
         # for a given path, get the midpoint
@@ -101,7 +104,7 @@ def runSimulation(P, Q, lengthOfPath, totalTicks):
     serverToClientPath = Path(lengthOfPath)
 
     client = Client(0, P)
-    server = Server(0)
+    server = Server(0, Q)
     observer = Observer()
 
     ticks = 0
@@ -136,4 +139,4 @@ def runSimulation(P, Q, lengthOfPath, totalTicks):
     
 
     
-runSimulation(0, 0.2, 5, 200)
+runSimulation(0, 0.2, 5, 500)
