@@ -3,7 +3,7 @@ from server import Server
 from observer import Observer
 from path import Path
 
-def run_simulation(P, Q, length_of_path, total_ticks):
+def run_simulation(P=0, Q=0, length_of_path=5, total_ticks=50):
 
 	client_to_server_path = Path(length_of_path)
 	server_to_client_path = Path(length_of_path)
@@ -12,21 +12,19 @@ def run_simulation(P, Q, length_of_path, total_ticks):
 	server = Server(0, Q)
 	observer = Observer()
 
-	ticks = 1
+	current_tick = 1
 
-	while (ticks <= total_ticks):
-		bit_reaching_server = client_to_server_path.add_value_to_path(client.cur_spin)
-		bit_reaching_client = server_to_client_path.add_value_to_path(server.cur_spin)
+	while (current_tick <= total_ticks):
+		bit_reaching_server = client_to_server_path.add_packet_to_path(client.cur_spin)
+		bit_reaching_client = server_to_client_path.add_packet_to_path(server.cur_spin)
 
-		# set value for next tick
-		if bit_reaching_server != None:
-			server.cur_spin = bit_reaching_server
-		if bit_reaching_client != None:
-			client.cur_spin = bit_reaching_client
+		# update value of spin bit for client and server
+		server.cur_spin = bit_reaching_server
+		client.cur_spin = bit_reaching_client
 
 		# C --- S
 		print("Tick:"),
-		print(ticks)
+		print(current_tick)
 		print("Client -> "), 
 		print(client_to_server_path.path),
 		print("-> Server") 
@@ -41,9 +39,9 @@ def run_simulation(P, Q, length_of_path, total_ticks):
 		# measurements are sampled from midpoint of path
 		observer.add_measurement(client_to_server_path)
 
-		ticks += 1
+		current_tick += 1
 
-	print("Final RTT is %f") % observer.measure_rtt()
+	print("Final RTT is %.2f") % observer.measure_rtt()
 
-# P is [0,1]
-run_simulation(0, 0, 5, 50)
+# P and Q are [0,1]
+run_simulation(0.8, 0, 5, 50)

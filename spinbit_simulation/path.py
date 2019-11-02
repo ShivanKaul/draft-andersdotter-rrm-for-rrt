@@ -13,11 +13,11 @@ class Path:
 	def path(self):
 		return self._path
 	
-	def get_value_at_index(self, index):
+	def get_spinbit_at_position(self, index):
 		return self._path[index]
 
 	# This is basically maintaining a path. 
-	def add_value_to_path(self, value):
+	def add_packet_to_path(self, value):
 		self._path[self.cur_index % self._max_size] = value
 		self.cur_index += 1
 		return self._path[-1]

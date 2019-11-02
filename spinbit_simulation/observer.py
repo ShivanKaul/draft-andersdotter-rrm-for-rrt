@@ -24,11 +24,12 @@ class Observer:
 		# for a given path, get the midpoint
 		midpt = path.max_size // 2
 
-		num = path.get_value_at_index(midpt)
+		num = path.get_spinbit_at_position(midpt)
 		if num != None:
 			# the path might not be full yet
 			self._measurements.append(num)
 
+			# Detect RTT by keeping track of edge transitions
 			if self.cur_train == -1:
 				# print("first measurement")
 				self.cur_train = num
