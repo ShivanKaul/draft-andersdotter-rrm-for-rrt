@@ -5,8 +5,8 @@
 Internet Research Task Force                             A. Andersdotter
 Internet-Draft                                                ARTICLE 19
 Intended status: Informational                                  S. Sahib
-Expires: May 1, 2020                                          Salesforce
-                                                        October 29, 2019
+Expires: May 6, 2020                                          Salesforce
+                                                        November 3, 2019
 
 
      Randomized Response Mechanisms in RRT Measurements for HTTP/3
@@ -19,10 +19,10 @@ Abstract
    observations for estimation of latency.  This document presents the
    results of an inquiry into the potential of using randomized response
    mechanisms (RRM) to reduce privacy loss in latency measurements.  It
-   concludes that RRM could be used to introduce choice for web browser
-   clients in preserving privacy in latency measurements, but that the
-   trade-offs, especially since the latency spin bit is already option,
-   do not favour RRM.
+   concludes that RRM could be used to introduce choice for clients in
+   preserving privacy in latency measurements.  But the trade-offs,
+   especially since the latency spin bit is already optional, do not
+   favour RRM.
 
 Status of This Memo
 
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 1, 2020.
+   This Internet-Draft will expire on May 6, 2020.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 1]
+Andersdotter & Sahib       Expires May 6, 2020                  [Page 1]
 
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
 
 
    carefully, as they describe your rights and restrictions with respect
@@ -69,8 +69,8 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Randomized Response Mechanisms  . . . . . . . . . . . . . . .   2
    3.  Application to latency spin bit . . . . . . . . . . . . . . .   3
-     3.1.  RRM at reflection/inversion . . . . . . . . . . . . . . .   6
-       3.1.1.  No reset and no edge identifying bit  . . . . . . . .   6
+     3.1.  RRM at edge transition  . . . . . . . . . . . . . . . . .   6
+       3.1.1.  No reset and no edge identifying bit  . . . . . . . .   7
        3.1.2.  Reset and no edge identifying bit . . . . . . . . . .   8
        3.1.3.  An edge identifying bit . . . . . . . . . . . . . . .   9
        3.1.4.  Discussion  . . . . . . . . . . . . . . . . . . . . .  10
@@ -78,9 +78,10 @@ Table of Contents
        3.2.1.  Client perturbation . . . . . . . . . . . . . . . . .  11
        3.2.2.  Client and server perturbation  . . . . . . . . . . .  12
        3.2.3.  Discussion  . . . . . . . . . . . . . . . . . . . . .  12
-   4.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-   5.  Informative References  . . . . . . . . . . . . . . . . . . .  13
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
+   4.  Simulation  . . . . . . . . . . . . . . . . . . . . . . . . .  13
+   5.  Conclusion  . . . . . . . . . . . . . . . . . . . . . . . . .  13
+   6.  Informative References  . . . . . . . . . . . . . . . . . . .  14
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -105,15 +106,15 @@ Table of Contents
    facilitate surveys on sensitive topics such as alcohol or drug abuse
    or political affiliation.  The design allows a survey taker to
    provide, with some known probability P, a "false" answer ("yes"
-   instead of "no", for example) to a survey question.  It is meant to
 
 
 
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 2]
+Andersdotter & Sahib       Expires May 6, 2020                  [Page 2]
 
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
 
 
+   instead of "no", for example) to a survey question.  It is meant to
    encourage truthful answers even in surveys where participants may
    otherwise feel compelled to give false answers.
 
@@ -155,6 +156,20 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    [Begin quote] Initially, during connection establishment, no packets
    with a spin bit are in flight, as shown in Figure 1.
 
+
+
+
+
+
+
+
+
+
+Andersdotter & Sahib       Expires May 6, 2020                  [Page 3]
+
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
+
+
    +--------+   -  -  -  -  -   +--------+
    |        |     -------->     |        |
    | Client |                   | Server |
@@ -162,13 +177,6 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    +--------+   -  -  -  -  -   +--------+
 
       Figure 1: Initial state, no spin bit between client and server
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 3]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
 
    Either the server, the client, or both can begin sending packets with
    short headers after connection establishment, as shown in Figure 2;
@@ -208,23 +216,19 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
                   Figure 4: Server reflects the spin edge
 
+
+
+
+
+
+Andersdotter & Sahib       Expires May 6, 2020                  [Page 4]
+
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
+
+
    Five ticks later, the 1-marked packet arrives at the client, which
    inverts its spin value and sends the inverted value on the next
    packet it sends, as shown in Figure 5.
-
-
-
-
-
-
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 4]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
 
          obs. points  X  Y
    +--------+   0  1  1  1  1   +--------+
@@ -263,7 +267,20 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    the assumed default behaviour of a client is that it "truly" inverts
    a bit, so that receiving a bit set to v=0 causes it to transmit a bit
    set to v=1.  In an RRM application, the client may "falsely" transmit
-   a bit set to v=0 even when it has received a bit set to v=0.
+   a bit set to v=0 even when it has received a bit set to v=0.  The
+   receiving of a spin edge is assumed to be a trigger event for a
+   reflection or an inversion.  The server and the client are assumed to
+   have an internal spin value that determines the spin bit that goes
+   out.  Every time a spin edge comes in (a trigger), this internal spin
+   value is changed, changing also the outgoing spin value.
+
+
+
+
+Andersdotter & Sahib       Expires May 6, 2020                  [Page 5]
+
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
+
 
    An additional assumption is that the server and client behave
    independently of one another.  This means that the server has no
@@ -273,18 +290,8 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
    We have looked at two ways of perturbing measurements:
 
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 5]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
-
-      1.  RRMs are applied so that the reflections in Figure 4 or
-      inversions in Figure 5 do not occur with probability P or Q
-      respectively.
+      1.  RRMs are applied so that edge transitions do not occur with
+      probability P or Q for server and client respectively.
 
       2.  RRMs are applied so that that each bit transmitted, whether or
       not an inversion is occurring, has a probability P of being the
@@ -295,7 +302,7 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    privacy-protecting properties while continuing to allow utility of
    the on-path observations in latency measurements.
 
-3.1.  RRM at reflection/inversion
+3.1.  RRM at edge transition
 
    The omission of a reflection or inversion creates difficulties.
    Namely, let's say the client omits the inversion in Figure 5.  Now
@@ -308,8 +315,8 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    of which were far too large, but would, over time, be able to deduce
    RTT from the smaller measurements.  The expected proportion of large
    and small measurements in the whole set of measurements could be
-   determined from the probabilities that a reflection/inversion does
-   not happen and the probability that the spin bit is re-initiated.
+   determined from the probabilities that a edge transition does not
+   happen and the probability that the spin bit is re-initiated.
 
    Another possible work-around is having an additional bit to indicate
    a spin edge, assigned by the server to the bit which is (not)
@@ -318,10 +325,18 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    applying RRM since the placement of the spin edge would no longer be
    obfuscated.
 
-   If the ordinary spin edge is obfuscated by through omission of
-   reflection/inversion, and the edge-identifying bit is also, with some
+   If the ordinary spin edge is obfuscated by through omission of edge
+   transition, and the edge-identifying bit is also, with some
    probability, not correctly identifying an edge, the utility of having
    two latency bits again goes up at no additional loss of privacy.
+
+
+
+
+Andersdotter & Sahib       Expires May 6, 2020                  [Page 6]
+
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
+
 
 3.1.1.  No reset and no edge identifying bit
 
@@ -329,23 +344,14 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    reflection (see Figure 4), it does not reflect with probability P.
    At the point of inversion (see Figure 5), it does not invert with
    probability Q.  We consider P and Q respectively to be the
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 6]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
-
    probability that the server or client does not behave in the way
    specified.
 
    Let -> be the operation that a bit changes value.  A correct
    reflection will be denoted R: a->a.  A correct inversion is denoted
-   I:a->b.  Prefixing R or I with a ! denotes that reflection/inversion
-   was not done correctly.  The variables a and b assume the values 0 or
-   1 and are never equal.  P(R: a->a) = 1-P and P(I: a->b) = 1-Q, while
+   I:a->b.  Prefixing R or I with a ! denotes that edge transition was
+   not done correctly.  The variables a and b assume the values 0 or 1
+   and are never equal.  P(R: a->a) = 1-P and P(I: a->b) = 1-Q, while
    P(!R: a->b) = P and P(!I: a->a) = Q.  An expression like R(v: 1->1)
    -> !I(v: 1->1) means that a bit whose initial value is 1 is correctly
    reflected, and then incorrectly inverted.  We can abbreviate this to
@@ -380,18 +386,16 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    the starting point would be v=1, and for the event following D, the
    starting point would be v=0.
 
+
+
+
+Andersdotter & Sahib       Expires May 6, 2020                  [Page 7]
+
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
+
+
    With this information, and the probabilities determined above, we can
    create a transition matrix in the Markovian sense.
-
-
-
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 7]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
    +----+-----------+-----------+-----------+-----------+
@@ -441,13 +445,9 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 8]
+Andersdotter & Sahib       Expires May 6, 2020                  [Page 8]
 
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
 
 
    +---+----------+--------+----------+--------+----------+----------+
@@ -501,9 +501,9 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib       Expires May 1, 2020                  [Page 9]
+Andersdotter & Sahib       Expires May 6, 2020                  [Page 9]
 
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
 
 
 3.1.4.  Discussion
@@ -557,9 +557,9 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 10]
+Andersdotter & Sahib       Expires May 6, 2020                 [Page 10]
 
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
 
 
    counter could be incremented by one.  Eventually one would end up
@@ -613,9 +613,9 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 11]
+Andersdotter & Sahib       Expires May 6, 2020                 [Page 11]
 
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
 
 
    1+1+2+1+3+1+2+1+1+1+3)/23 = 2.26.  That is clearly not satisfactory
@@ -669,9 +669,9 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 12]
+Andersdotter & Sahib       Expires May 6, 2020                 [Page 12]
 
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
 
 
    application.  The moving windows filtering method applied to make
@@ -681,7 +681,11 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    estimate the true latency.  More accurate latency measurements may be
    achieved by having a larger number of sequences observed.
 
-4.  Conclusion
+4.  Simulation
+
+   TODO
+
+5.  Conclusion
 
    The spin bit is associated with an IP address which creates
    linkability (see [RFC6973] and [RFC8280]).  The privacy concern
@@ -714,21 +718,25 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
    privacy benefit beyond what is already guaranteed in the present
    specification of the spin bit in Section 17.3.1 [I-D-QUIC].
 
-5.  Informative References
+
+
+
+
+
+
+
+Andersdotter & Sahib       Expires May 6, 2020                 [Page 13]
+
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
+
+
+6.  Informative References
 
    [AA-CL]    Andersdotter, A. and C. Laengstroem, "Differential Privacy
               (PEARG, IETF104)", March 2019,
               <https://datatracker.ietf.org/meeting/104/materials/
               slides-104-pearg-amelia-christoffer-differential-privacy-
               00>.
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 13]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
 
    [DWORK]    Roth, A. and C. Dwork, "The Algorithmic Foundations of
               Differential Privacy", 2014,
@@ -765,6 +773,19 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
               <https://tools.ietf.org/html/
               draft-martini-hrpc-quichr-00>.
 
+
+
+
+
+
+
+
+
+Andersdotter & Sahib       Expires May 6, 2020                 [Page 14]
+
+Internet-Draft            rrm-for-rrt-in-http3             November 2019
+
+
    [TRAMMEL]  Trammel, B., Boucadair, M., Even, R., Fioccola, G.,
               Fossati, T., Ihlar, M., Morton, A., and E. Stephan,
               "Adding Explicit Passive Measurability of Two-Way Latency
@@ -773,18 +794,6 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
               draft-trammell-quic-spin-03.txt>.
 
 Authors' Addresses
-
-
-
-
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 14]
-
-Internet-Draft            rrm-for-rrt-in-http3              October 2019
-
 
    Amelia Andersdotter
    ARTICLE 19
@@ -828,13 +837,4 @@ Internet-Draft            rrm-for-rrt-in-http3              October 2019
 
 
 
-
-
-
-
-
-
-
-
-
-Andersdotter & Sahib       Expires May 1, 2020                 [Page 15]
+Andersdotter & Sahib       Expires May 6, 2020                 [Page 15]

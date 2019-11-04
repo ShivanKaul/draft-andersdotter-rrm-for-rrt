@@ -32,7 +32,7 @@
       </address>
     </author>
 
-    <date year="2019" month="October" day="29"/>
+    <date year="2019" month="November" day="3"/>
 
      <area>General</area>
 
@@ -46,7 +46,7 @@
 
     <abstract>
 
-<t>The latency spin bit is an optional feature included in the <xref target="I-D-QUIC">QUIC transport protocol</xref>. It enables passive, on-path observations for estimation of latency. This document presents the results of an inquiry into the potential of using randomized response mechanisms (RRM) to reduce privacy loss in latency measurements. It concludes that RRM could be used to introduce choice for web browser clients in preserving privacy in latency measurements, but that the trade-offs, especially since the latency spin bit is already option, do not favour RRM.</t>
+<t>The latency spin bit is an optional feature included in the <xref target="I-D-QUIC">QUIC transport protocol</xref>. It enables passive, on-path observations for estimation of latency. This document presents the results of an inquiry into the potential of using randomized response mechanisms (RRM) to reduce privacy loss in latency measurements. It concludes that RRM could be used to introduce choice for clients in preserving privacy in latency measurements. But the trade-offs, especially since the latency spin bit is already optional, do not favour RRM.</t>
 
     </abstract>
 
@@ -145,35 +145,35 @@ in <xref target="illus4"/>.</t>
 
 <t>Applying randomized response mechanisms (RRMs) perturbs the observed sequence lengths (k[0], ..., k[n]). The perturbation will have the effect of lengthening, shortening, or making more arbitrary the lengths of the sequences, thereby increasing the variance, or disable the possibility, of an estimator of the true RTT value.</t>
 
-<t>The server or the client is assumed to behave as described in <xref target="illus3" /> and <xref target="illus4" />, unless specifically stated otherwise. That means the assumed default behaviour is that a "truly" reflecting server that receives a bit set to v=0 always reflects a bit with v=0. In an RRM application, a server which "falsely" reflects a bit receives a bit set to v=0 and reflects a bit set to v=1. Similarly, the assumed default behaviour of a client is that it "truly" inverts a bit, so that receiving a bit set to v=0 causes it to transmit a bit set to v=1. In an RRM application, the client may "falsely" transmit a bit set to v=0 even when it has received a bit set to v=0.</t>
+<t>The server or the client is assumed to behave as described in <xref target="illus3" /> and <xref target="illus4" />, unless specifically stated otherwise. That means the assumed default behaviour is that a "truly" reflecting server that receives a bit set to v=0 always reflects a bit with v=0. In an RRM application, a server which "falsely" reflects a bit receives a bit set to v=0 and reflects a bit set to v=1. Similarly, the assumed default behaviour of a client is that it "truly" inverts a bit, so that receiving a bit set to v=0 causes it to transmit a bit set to v=1. In an RRM application, the client may "falsely" transmit a bit set to v=0 even when it has received a bit set to v=0. The receiving of a spin edge is assumed to be a trigger event for a reflection or an inversion. The server and the client are assumed to have an internal spin value that determines the spin bit that goes out. Every time a spin edge comes in (a trigger), this internal spin value is changed, changing also the outgoing spin value.</t>
 
 <t>An additional assumption is that the server and client behave independently of one another. This means that the server has no information on whether the client has omitted an inversion, and the client has no information on whether the server has omitted a reflection. Omissions are therefore independent events.</t>
 
 <t>We have looked at two ways of perturbing measurements:</t>
 
 <t><list>
-  <t>1. RRMs are applied so that the reflections in <xref target="illus3" /> or inversions in <xref target="illus4" /> do not occur with probability P or Q respectively.</t>
+  <t>1. RRMs are applied so that edge transitions do not occur with probability P or Q for server and client respectively.</t>
   <t>2. RRMs are applied so that that each bit transmitted, whether or not an inversion is occurring, has a probability P of being the "wrong" value.</t>
 </list>
 </t>
 
 <t>They will be dealt with in turn, identifying pitfalls and potential ways of addressing those pitfalls. The goal is to have better privacy-protecting properties while continuing to allow utility of the on-path observations in latency measurements.</t>
 
-<section anchor="reflection" title="RRM at reflection/inversion">
+<section anchor="reflection" title="RRM at edge transition">
 
   <t>The omission of a reflection or inversion creates difficulties. Namely, let's say the client omits the inversion in <xref target="illus4" />. Now there is no longer a spin edge so there is nothing to activate future reflections/inversions.</t>
 
-  <t>A possible work-around is to do random re-sets of the spin bit, i.e., starting the process fresh from <xref target="illus1" />. Observers X and Y in <xref target="illus4" /> would then get a series of measurements (k0, ..., kn), some of which were far too large, but would, over time, be able to deduce RTT from the smaller measurements. The expected proportion of large and small measurements in the whole set of measurements could be determined from the probabilities that a reflection/inversion does not happen and the probability that the spin bit is re-initiated.</t>
+  <t>A possible work-around is to do random re-sets of the spin bit, i.e., starting the process fresh from <xref target="illus1" />. Observers X and Y in <xref target="illus4" /> would then get a series of measurements (k0, ..., kn), some of which were far too large, but would, over time, be able to deduce RTT from the smaller measurements. The expected proportion of large and small measurements in the whole set of measurements could be determined from the probabilities that a edge transition does not happen and the probability that the spin bit is re-initiated.</t>
 
   <t>Another possible work-around is having an additional bit to indicate a spin edge, assigned by the server to the bit which is (not) reflected in <xref target="illus3" />, or by the client to the bit which is (not) inverted in <xref target="illus4" />. In this case there would not be a point in applying RRM since the placement of the spin edge would no longer be obfuscated.</t>
 
-  <t>If the ordinary spin edge is obfuscated by through omission of reflection/inversion, and the edge-identifying bit is also, with some probability, not correctly identifying an edge, the utility of having two latency bits again goes up at no additional loss of privacy.</t>
+  <t>If the ordinary spin edge is obfuscated by through omission of edge transition, and the edge-identifying bit is also, with some probability, not correctly identifying an edge, the utility of having two latency bits again goes up at no additional loss of privacy.</t>
   
 <section anchor="example1" title="No reset and no edge identifying bit">
     
 <t>The bit starts spinning with value v=1 in <xref target="illus2" />. At the point of reflection (see <xref target="illus3" />), it does not reflect with probability P. At the point of inversion (see <xref target="illus4" />), it does not invert with probability Q. We consider P and Q respectively to be the probability that the server or client does not behave in the way specified.</t> 
 
-	<t>Let -> be the operation that a bit changes value. A correct reflection will be denoted R: a->a. A correct inversion is denoted I:a->b. Prefixing R or I with a ! denotes that reflection/inversion was not done correctly. The variables a and b assume the values 0 or 1 and are never equal. P(R: a->a) = 1-P and P(I: a->b) = 1-Q, while P(!R: a->b) = P and P(!I: a->a) = Q. An expression like R(v: 1->1) -> !I(v: 1->1) means that a bit whose initial value is 1 is correctly reflected, and then incorrectly inverted. We can abbreviate this to [1->1->1]. R must follow I and vice versa, so we will have a chain of events R->I->R->I-> etc.</t>
+	<t>Let -> be the operation that a bit changes value. A correct reflection will be denoted R: a->a. A correct inversion is denoted I:a->b. Prefixing R or I with a ! denotes that edge transition was not done correctly. The variables a and b assume the values 0 or 1 and are never equal. P(R: a->a) = 1-P and P(I: a->b) = 1-Q, while P(!R: a->b) = P and P(!I: a->a) = Q. An expression like R(v: 1->1) -> !I(v: 1->1) means that a bit whose initial value is 1 is correctly reflected, and then incorrectly inverted. We can abbreviate this to [1->1->1]. R must follow I and vice versa, so we will have a chain of events R->I->R->I-> etc.</t>
 
 	<t>In order for a reflection or an inversion to occur, there must be a trigger. The spin edge is the trigger. But in the event of [1->1->1] the spin edge has disappeared! Once the bit spins back to the reflection, it will have the same value as when it started. In fact, regardless of the starting value, any R->I event that results in [1->1] or [0->0] leads to a loop.</t> 
 	
@@ -321,6 +321,12 @@ in <xref target="illus4"/>.</t>
 </section>
 
 </section>
+  
+</section>
+
+<section anchor="simulation" title="Simulation">
+
+<t>TODO</t>
   
 </section>
 
