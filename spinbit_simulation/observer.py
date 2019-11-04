@@ -44,5 +44,4 @@ class Observer:
 				self.ticks_between_edges = 0
 				# reset current train
 				self.cur_train = num
-			
 			self.ticks_between_edges += 1
