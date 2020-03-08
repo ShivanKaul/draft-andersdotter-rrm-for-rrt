@@ -178,196 +178,212 @@
 
     <t>We have looked at two ways of perturbing measurements:</t>
 
-    <t><list>
-      <t>1. RRMs are applied so that edge transitions do not occur with probability P or Q for server and client respectively.</t>
-      <t>2. RRMs are applied so that that each bit transmitted, whether or not an inversion is occurring, has a probability P of being the "wrong" value.</t>
-    </list>
-  </t>
+    <t><list style="numbers">
+      <t>RRMs are applied so that that each bit transmitted, whether or not an inversion is occurring, has a probability P of being the "wrong" value ("Each bit RRM").</t>
+      <t>RRMs are applied so that edge transitions do not occur with probability P or Q for server and client respectively("Edge transition RRM").</t>
+    </list></t>
 
-  <t>They will be dealt with in turn, identifying pitfalls and potential ways of addressing those pitfalls. The goal is to have better privacy-protecting properties while continuing to allow utility of the on-path observations in latency measurements.</t>
+    <t>They will be dealt with in turn, identifying pitfalls and potential ways of addressing those pitfalls. The goal is to have better privacy-protecting properties while continuing to allow utility of the on-path observations in latency measurements.</t>
 
-  <section anchor="reflection" title="RRM at edge transition">
 
-    <t>The omission of a reflection or inversion creates difficulties. Namely, let's say the client omits the inversion in <xref target="illus4" />. Now there is no longer a spin edge so there is nothing to activate future reflections/inversions.</t>
+    <section anchor="eachbit" title="RRM at each bit">
 
-    <t>A possible work-around is to do random re-sets of the spin bit, i.e., starting the process fresh from <xref target="illus1" />. Observers X and Y in <xref target="illus4" /> would then get a series of measurements (k0, ..., kn), some of which were far too large, but would, over time, be able to deduce RTT from the smaller measurements. The expected proportion of large and small measurements in the whole set of measurements could be determined from the probabilities that a edge transition does not happen and the probability that the spin bit is re-initiated.</t>
+      <t>Let us say any bit transmitted from either the client or the server is "off" in relation to what it proposed in the Spin Bit model with some probability Q. If Q = 0.5, the spinning bits will come across as a random 0s and 1s and it will be difficult to estimate any edge. However, if Q is less than 0.5, the spin edge can be estimated for instance by computing an average number of 0s or 1s in the past m ticks. For all averages above some cut-off rate, a measurement counter could be incremented by one. Eventually one would end up with a series (k'0, ..., k'n) that roughly corresponds to (k0, ..., kn) above.</t>
 
-    <t>Another possible work-around is having an additional bit to indicate a spin edge, assigned by the server to the bit which is (not) reflected in <xref target="illus3" />, or by the client to the bit which is (not) inverted in <xref target="illus4" />. In this case there would not be a point in applying RRM since the placement of the spin edge would no longer be obfuscated.</t>
+      <section anchor="example4" title="Client perturbation">
 
-    <t>If the ordinary spin edge is obfuscated by through omission of edge transition, and the edge-identifying bit is also, with some probability, not correctly identifying an edge, the utility of having two latency bits again goes up at no additional loss of privacy.</t>
+        <t>The bit spins in the foreseen way. Every time a bit is transmitted, there is a probability Q that it holds a different value than it should. In <xref target="illus4" /> , either measurements station X or both stations Y observe a passing bit, as well as bits passing before or after that bit (if any). After observing 2k+1 bits (b[-k], ..., b[0], ..., b[k]) the true value of bit b[0] is estimated, for instance based on whether the majority of b[i] were v=0 or v=1. The estimated value is then used to increment a sequence counter.</t>
 
-    <section anchor="example1" title="No reset and no edge identifying bit">
+        <t>The estimator follows a binomial distribution (drawing with replacement), and the risk of misidentifying a bit is equal to the risk of having (k+1) v=1 bits in the 2k observations where b[0] "should" be attributed to v=0. This risk depends on Q and k.</t>
 
-      <t>The bit starts spinning with value v=1 in <xref target="illus2" />. At the point of reflection (see <xref target="illus3" />), it does not reflect with probability P. At the point of inversion (see <xref target="illus4" />), it does not invert with probability Q. We consider P and Q respectively to be the probability that the server or client does not behave in the way specified.</t> 
+        <t>Setting k too large creates a risk of having estimator sequences that are longer than the round-trip time (RTT) to be measured. If Q is reasonably small, estimation will still eventually be possible after a sufficient amount of measurements. One option is to keep Q variable and determined by the client, introducing the possibility of choice in RTT measurements.</t>
 
-      <t>Let -> be the operation that a bit changes value. A correct reflection will be denoted R: a->a. A correct inversion is denoted I:a->b. Prefixing R or I with a ! denotes that edge transition was not done correctly. The variables a and b assume the values 0 or 1 and are never equal. P(R: a->a) = 1-P and P(I: a->b) = 1-Q, while P(!R: a->b) = P and P(!I: a->a) = Q. An expression like R(v: 1->1) -> !I(v: 1->1) means that a bit whose initial value is 1 is correctly reflected, and then incorrectly inverted. We can abbreviate this to [1->1->1]. R must follow I and vice versa, so we will have a chain of events R->I->R->I-> etc.</t>
+        <t>Make the following assumptions:</t>
 
-      <t>In order for a reflection or an inversion to occur, there must be a trigger. The spin edge is the trigger. But in the event of [1->1->1] the spin edge has disappeared! Once the bit spins back to the reflection, it will have the same value as when it started. In fact, regardless of the starting value, any R->I event that results in [1->1] or [0->0] leads to a loop.</t> 
+        <t><list style="numbers">
+          <t>The "real" round-trip time is 6+7=13, where 6 is the number of ticks between the client and server, and 7 is the number of ticks between server and client.</t>
+          <t>The server always reflects exactly the value of the bit it receives, and</t>
+          <t>The client always inverts the value of the bit it receives, meaning that all spin edges are always preserved.</t>
+        </list></t>
 
-      <t>We can define the following events:</t>
+        <t>Four RTTs of the spin bit according to specification would now give rise to the following data, available to an on-path observer: 0000000000000111111111111100000000000001111111111111. To estimate the time of a RTT, we could compute 13*4/4 = 13 time units.</t>
 
-      <t><list>
-       <t>A: [1->1]. 
-       </t>
-       <t>B: [0->0]. 
-       </t>
-       <t>C: [0->1]. 
-       </t>
-       <t>D: [1->0]. 
-       </t>
-     </list></t>
+        <t>Set Q=0.2. Now the four RTTs may instead be measured as 1001000000100111111001111100000010010110111011010111. With this sequence, we would instead estimate (1+2+1+6+1+2+6+2+5+6+1+2+ 1+1+2+1+3+1+2+1+1+1+3)/23 = 2.26. That is clearly not satisfactory if the target round-trip time estimation is 13.</t>
 
-     <t>Event A can occur as a result of (!R, !I) for starting point v=0, or as a result of (R, !I) for starting point v=1 or v=0. Event B can occur as a result of (!R, !I) for starting point v=1, or as a result of (R, !I) for starting point v=1 or v=0. Event C occurs as a result of (!R, I) for starting point v=1, or (R, I) for starting point v=0. Event D occurs as a result of (!R, I) for starting point v=0 or (R, I) for starting point v=0. The starting point v can be taken as the final digit in each event, meaning that for the event following C, the starting point would be v=1, and for the event following D, the starting point would be v=0.</t>
+        <t>Divide the RTT measurements into moving windows with k=2 (i.e., each window contains (b[-2], b[-1], b[0], b[1], b[2])) to arrive at [(10010), (00100), (01000), (10000), (00000), (00000), (00001), (00010), (00100), etc]. Each window estimates b[0], so the "true" value of bit 2 will be estimated by (10010), the true value of bit three from (00100), and so forth.</t>
 
-     <t>With this information, and the probabilities determined above, we can create a transition matrix in the Markovian sense.</t>
-
-     <figure title="RRM transition matrix, no reset and no edge-id bit" anchor="illus6"><artwork><![CDATA[
-
-      +----+-----------+-----------+-----------+-----------+
-      |    |     A     |     B     |     C     |     D     |
-      +----+-----------+-----------+-----------+-----------+
-      | A  |     1     |     0     |     0     |     0     |
-      +----+-----------+-----------+-----------+-----------+
-      | B  |     0     |     1     |     0     |     0     |
-      +----+-----------+-----------+-----------+-----------+
-      | C  |  (1-P)Q   |     Q     |   P(1-Q)  | (1-P)(1-Q)|
-      +----+-----------+-----------+-----------+-----------+
-      | D  |     Q     |  (1-P)Q   |(1-P)(1-Q) |  P(1-Q)   |
-      +----+-----------+-----------+-----------+-----------+
-      ]]></artwork></figure>
-
-      <t>It should be quite clear from this matrix that events A and B act as sinks. Because ending in a sink removes all possibility of future measurements, we could hope to avoid this situation. The easiest way is setting Q=0, which would imply there is always a correct inversion. For any Q > 0, this process will eventually end up in a sink.</t>
-
-    </section>
-
-    <section anchor="example2" title="Reset and no edge identifying bit ">
-
-      <t>The possible outcomes are as in <xref target="example1" />, and the problem to be resolved is that the spin edge eventually disappears with probability 1.</t>
-
-      <t>Introducing the probability R of a random re-set of the spin bit at every m:th bit transmission can "re-initiate" the edge by taking the entire system back into the situation described in <xref target="illus3" /> (with the modification that it is not assumed that the starting point must be v=1; the starting point could also be reset to v=0). It is assumed that a re-set occurs on the client-side, and not on the server-side.</t>
-
-      <t>The true number of ticks in a round-trip time is C. If R>0 and m >> C, the process will be reset every period of km ticks, where k is an integer whose distribution is geometric with parameter R. After km ticks, an on-path observer may pick up a sequence that can be used as a basis for measuring the round-trip time.</t>
-
-      <t>In <xref target="illus7" /> the situation where m=2 is illustrated.</t>
-
-      <figure title="RRM TM, Reset at m=2, no edge-id bit" anchor="illus7"><artwork><![CDATA[
-
-        +---+----------+--------+----------+--------+----------+----------+
-        |   |   A,m0   |  A,m1  |   B,m0   |   B,m1 |    C     |     D    |
-        +---+----------+--------+----------+--------+----------+----------+
-        |A,0|     0    |   1    |    0     |    0   |    0     |     0    |
-        +---+----------+--------+----------+--------+----------+----------+
-        |A,1|    1-R   |   0    |    0     |    0   |    R     |     0    |
-        +---+----------+--------+----------+--------+----------+----------+
-        |B,0|     0    |   0    |    0     |    1   |    0     |     0    |
-        +---+----------+--------+----------+--------+----------+----------+
-        |B,1|     0    |   0    |   1-R    |    0   |    R     |     0    |
-        +---+----------+--------+----------+--------+----------+----------+
-        | C |  (1-P)Q  |   0    |    Q     |    0   |  P(1-Q)  |(1-P)(1-Q)|
-        +---+----------+--------+----------+--------+----------+----------+
-        | D |     Q    |   0    |  (1-P)Q  |    0   |(1-P)(1-Q)|  P(1-Q)  |
-        +---+----------+--------+----------+--------+----------+----------+
-        ]]></artwork></figure>
-
-        <t>If m (or km | k ~ Ge(R)) is too small, there will never be any sound measurements since the process will always start over before a measurement appears. Using a reset function is therefore especially burdensome for an on-path observer in cases where latencies are a priori expected to be large.</t>
+        <t>Applying the procedure we are left with 000000000011111111111111000000000011111111111111, or (10+14+14+10)/4=12. This is much better precision if the target round-trip time estimation is 13.</t> 
 
       </section>
 
-      <section anchor="example3" title="An edge identifying bit ">
+      <section anchor="example5" title="Client and server perturbation">
 
-        <t>The possible outcomes are as in <xref target="example1" />, and the problem to be resolved is that the spin edge eventually disappears with probability 1.</t>
+        <t>Now let us consider the case where both the client and server randomize each transmitted bit, with probabilities Q and P respectively. Using the same assumptions as in <xref target="example4" /> and the same target RTT of 13, and letting Q=0.2 and P=0.1, we may end up measuring 0000000000000111111111011100000001010001111010011111 and throw the method of moving windows for k=2 arriving at 000000000001111111111111000000000000011111001111 leaving us with sequences of length (11, 13, 13, 5, 2, 4).</t>
 
-        <t>Introducing an edge identifying bit, which may or may not hold a true value with probability S, could help mitigate this problem. This could effectively be seen as a recursive RRM: because the original RRM risks removing the utility of the spin bit entirely, another bit to which RRM is applied is added.</t>
-
-        <t>Logically, adding another identifying bit increases the possible set of states of the Markovian chains described in <xref target="example1" /> and <xref target="example2" />. In fact, the systems would still possess similar short-comings, but with different probabilities. The exception is if the identifying bit is always on with probability S=1. In this case, the privacy-enhancing properties sought in <xref target="example1" /> and <xref target="example2" /> would be lost, since the main goal of RRM in both of those cases is to perturb the measurements (k0, ...., kn) used to estimate round-trip times.</t>
+        <t>As previously mentioned, the risk of a bit being misidentified is related to P, Q and k. Because a misidentified bit always make sequences appear to be of shorter length, the sequences that measure greater length should be taken as the RTT estimate. In this event that we choose to only use that half of the esimated sequences with the greatest length as a basis for the latency calculations, we would have (11+13+13)/3=12.3 as the estimator for the RTT.</t>
 
       </section>
 
-      <section anchor="discussion1" title="Discussion">
+      <section anchor="discussion2" title="Discussion">
 
-       <t>In <xref target="example1" /> we saw that applying RRM at reflection and inversion could create a situation where the spin edge disappears. There are two parameters, P and Q, which are set by the client and server respectively.</t>
+        <t>In the introduction to this section, we observed that setting Q=0.5 would make any pattern recognition among the bits extremely difficult for the most advanced of filters. We proceeded to discuss the case Q=0.2 and a potential filter for this case in <xref target="example4" />. If Q is taken to be a parameter under client control, of course the client could set Q so that latency measurements are made impossible. On the other hand, such client control already exists, since the latency spin bit is optional. (see <xref target="RFC6973">Sec. 7.2</xref> and <xref target="I-D-QUIC">Section 17.3.1</xref>). </t>
 
-       <t>We could reduce the risk of the spin edge disappearing by setting the probability of a wrongful inversion to Q=0. However, inversion is an activity undertaken by the client and Q is a parameter under the clients control. Since the client is the entity assumed, in most cases, to be the most likely actor to be a human, natural person (in either case, more likely than the server), this solution would remove power from the client. Forcibly setting Q=0 would violate the assumptions of user control in <xref target="RFC6973">Section 7.2</xref>.</t>
+        <t>In <xref target="example5"/> we introduced the possiblity of yet another parameter P, to be set by the server for determining server-side RRM application. The moving windows filtering method applied to make sense of on-path observations remains the same.</t>
 
-       <t>In <xref target="example2" /> we considered whether it was possible to reset a latency spin bit whose edge has disappeared. Effectively, resetting would improve an on-path observers chances of making measurements, but it also introduces a delay for the acquisition of useful measurements.</t>
+        <t>The filtering methods applied in this section consistently under-estimate the true latency. More accurate latency measurements may be achieved by having a larger number of sequences observed.</t>
 
-       <t>We assume that the client will set Q>0 and that this is under the client's control, and have three additional parameters: P, m and R. Both m and R can be under the client's control. We found that km | k~Ge(R) has an impact on the ability to measure latency when latency is large. In practice, an average human, natural person is probably not going to choose parameters Q, m and R (even though they could be made available at settings in an interface). Setting of these parameters will instead likely be under the control of the entity that produces latency spin bit capable software.</t>
-
-       <t>In  <xref target="example3" /> we conclude that adding an edge-identifying bit is not a remedy to any of the issues with the methods in  <xref target="example1" /> or  <xref target="example2" />. It introduces the possibility of yet another client-controlled parameter S, but the obfuscating effects derived from S could instead be obtained by regulating previously suggested parameters Q, m or R.</t>
-
-     </section>
-
-   </section>
-
-   <section anchor="eachbit" title="RRM at each bit">
-
-    <t>Let us say any bit transmitted from either the client or the server is "off" in relation to what it proposed in the Spin Bit model with some probability Q. If Q = 0.5, the spinning bits will come across as a random 0s and 1s and it will be difficult to estimate any edge. However, if Q is less than 0.5, the spin edge can be estimated for instance by computing an average number of 0s or 1s in the past m ticks. For all averages above some cut-off rate, a measurement counter could be incremented by one. Eventually one would end up with a series (k'0, ..., k'n) that roughly corresponds to (k0, ..., kn) above.</t>
-
-    <section anchor="example4" title="Client perturbation">
-
-      <t>The bit spins in the foreseen way. Every time a bit is transmitted, there is a probability Q that it holds a different value than it should. In <xref target="illus4" /> , either measurements station X or both stations Y observe a passing bit, as well as bits passing before or after that bit (if any). After observing 2k+1 bits (b[-k], ..., b[0], ..., b[k]) the true value of bit b[0] is estimated, for instance based on whether the majority of b[i] were v=0 or v=1. The estimated value is then used to increment a sequence counter.</t>
-
-      <t>The estimator follows a binomial distribution (drawing with replacement), and the risk of misidentifying a bit is equal to the risk of having (k+1) v=1 bits in the 2k observations where b[0] "should" be attributed to v=0. This risk depends on Q and k.</t>
-
-      <t>Setting k too large creates a risk of having estimator sequences that are longer than the round-trip time (RTT) to be measured. If Q is reasonably small, estimation will still eventually be possible after a sufficient amount of measurements. One option is to keep Q variable and determined by the client, introducing the possibility of choice in RTT measurements.</t>
-
-      <t>Make the following assumptions:</t>
-
-      <t><list>
-        <t>1. the "real" round-trip time is 6+7=13, where 6 is the number of ticks between the client and server, and 7 is the number of ticks between server and client.</t>
-        <t>2. the server always reflects exactly the value of the bit it receives, and</t>
-        <t>3. the client always inverts the value of the bit it receives, meaning that all spin edges are always preserved.</t>
-      </list></t>
-
-      <t>Four RTTs of the spin bit according to specification would now give rise to the following data, available to an on-path observer: 0000000000000111111111111100000000000001111111111111. To estimate the time of a RTT, we could compute 13*4/4 = 13 time units.</t>
-
-      <t>Set Q=0.2. Now the four RTTs may instead be measured as 1001000000100111111001111100000010010110111011010111. With this sequence, we would instead estimate (1+2+1+6+1+2+6+2+5+6+1+2+ 1+1+2+1+3+1+2+1+1+1+3)/23 = 2.26. That is clearly not satisfactory if the target round-trip time estimation is 13.</t>
-
-      <t>Divide the RTT measurements into moving windows with k=2 (i.e., each window contains (b[-2], b[-1], b[0], b[1], b[2])) to arrive at [(10010), (00100), (01000), (10000), (00000), (00000), (00001), (00010), (00100), etc]. Each window estimates b[0], so the "true" value of bit 2 will be estimated by (10010), the true value of bit three from (00100), and so forth.</t>
-
-      <t>Applying the procedure we are left with 000000000011111111111111000000000011111111111111, or (10+14+14+10)/4=12. This is much better precision if the target round-trip time estimation is 13.</t> 
+      </section>
 
     </section>
 
-    <section anchor="example5" title="Client and server perturbation">
+    <section anchor="reflection" title="RRM at edge transition">
 
-      <t>Now let us consider the case where both the client and server randomize each transmitted bit, with probabilities Q and P respectively. Using the same assumptions as in <xref target="example4" /> and the same target RTT of 13, and letting Q=0.2 and P=0.1, we may end up measuring 0000000000000111111111011100000001010001111010011111 and throw the method of moving windows for k=2 arriving at 000000000001111111111111000000000000011111001111 leaving us with sequences of length (11, 13, 13, 5, 2, 4).</t>
+      <t>The omission of a reflection or inversion creates difficulties. Namely, let's say the client omits the inversion in <xref target="illus4" />. Now there is no longer a spin edge so there is nothing to activate future reflections/inversions.</t>
 
-      <t>As previously mentioned, the risk of a bit being misidentified is related to P, Q and k. Because a misidentified bit always make sequences appear to be of shorter length, the sequences that measure greater length should be taken as the RTT estimate. In this event that we choose to only use that half of the esimated sequences with the greatest length as a basis for the latency calculations, we would have (11+13+13)/3=12.3 as the estimator for the RTT.</t>
+      <section anchor="assumptions" title="Assumptions on the spin bit mechanism">
 
+        <t>Deciding on a RRM scheme for RTT in QUIC requires a more explicitly defined mechanism for changing the spin value (the value of the spin bit being transmitted from the client or server) than presently is the case in <xref target="TRAMMEL"/>. For instance, the way in which the server is specified to change its spin value currently is:</t>
+
+        <t>
+          "The server initializes its spin value to 0.  When it receives a
+          packet from the client, if that packet has a short header and if
+          it increments the highest packet number seen by the server from
+          the client, it sets the spin value to the spin bit in the received
+          packet."
+        </t>
+
+        <t>while the mechanism for changing the spin value in the client is</t>
+
+        <t>
+          "The client initializes its spin value to 0.  When it receives a
+          packet from the server, if the packet has a short header and if it
+          increments the highest packet number seen by the client from the
+          server, it sets the spin value to the opposite of the spin bit in
+          the received packet."
+
+        </t>
+
+        <t>
+          The goal of the designer in <xref target="TRAMMEL"/> is to cause the spin bit to change its value once per round-trip. Our design goal is different. We want to have the spin bit only sometimes change its value once per round-trip, while it might other times change its value twice per round-trip, or not at all. Additionally, we have the goal of ensuring that we can exercise control over what percentage of round-trips give useful measurements. To simultaneously fill all of those requirements, we introduce the following additional constraints on updating the spin value:
+        </t>
+
+        <t>
+          <list style="numbers">
+
+            <t>Client and server have an <spanx>internal spin value</spanx> (NV) which decides the value of the next outgoing spin bit.</t>
+            <t>Clients and server keep track of the second-to-last incoming spin bit (SLISB), and the last incoming spin bit (LISB).</t>
+            <t> The NV initializes to 0 at both the client and the server.</t>
+            <t> An <spanx>inversion</spanx> of the client's NV is triggered if SLISB and LISB have different values. Notably, no comparison between the SLISB or LISB and the NV is made. The value of the NV, which determines the value of the next spin bit transmitted, is set independently of the value of the SLISB and LISB.</t>
+            <t> An inversion does not happen with probability <spanx>q</spanx>, even when it should.</t>
+            <t> A <spanx>reflection</spanx> of the server's NV is also triggered if SLISB and LISB have different values.</t>
+            <t> A reflection does not happen with probability <spanx>p</spanx>, even when it should.</t>
+            <t> In the absence of a triggering event, the NV does not change its value and the client or server continue to transmit bits holding the current NV value.</t>
+            <t> Client and server <spanx>act independently</spanx> of one another, so that neither client or server have any way of determining whether the other has reflected or inverted ``truthfully''.</t>
+            <t> A special case is the first time a spin bit is recorded by a client or server (immediately after initialization). In this case, the client and server both update the NV truthfully.</t>
+          </list>
+        </t>
+
+        <t>We illustrate these assumptions with a truth table for the client in <xref target="truth_table_client"/> and for the server in <xref target="truth_table_server" />.</t>
+
+        <figure title="Client truth table for inversion of the client's internal spin bit value NVclient. NV'client in the right-most column constitutes a truthful inversion with probability (1−q) and a lying inversion with probability q. * A special case is the firstround-trip after initialization." anchor="truth_table_client"><artwork><![CDATA[
+          +----------+-------+------+-------------------+
+          | NVclient | SLISB | LISB |     NV'client     |
+          +----------+-------+------+-------------------+
+          | (0)      | (−)   | (0)  | (1)∗              |
+          | 0        |  0    |  0   |  0                |
+          | 0        |  0    |  1   |  0(q) or 1(1-q)   |
+          | 0        |  1    |  0   |  0(q) or 1(1-q)   |
+          | 0        |  1    |  1   |  0                |
+          | 1        |  0    |  0   |  1                |
+          | 1        |  0    |  1   |  1(q) or 0(1-q)   |
+          | 1        |  1    |  0   |  1(q) or 0(1-q)   |
+          | 1        |  1    |  1   |  1                |
+          +----------+-------+------+-------------------+
+
+          ]]></artwork>
+        </figure>
+
+        <figure title="Server truth table for reflection of the server’s internal spin bit value NVserver. * A special case is the firstround-trip after initialization." anchor="truth_table_server"><artwork><![CDATA[
+
+          +----------+-------+------+----------------+
+          | NVclient | SLISB | LISB |   NV'client    |
+          +----------+-------+------+----------------+
+          | (0)      | (−)   | (0)  | (0)∗           |
+          | 0        | 0     | 0    | 0              |
+          | 0        | 0     | 1    | 0(1−p) or 1(p) |
+          | 0        | 1     | 0    | 0(1−p) or 1(p) |
+          | 0        | 1     | 1    | 0              |
+          | 1        | 0     | 0    | 1              |
+          | 1        | 0     | 1    | 1(1-p) or 0(q) |
+          | 1        | 1     | 0    | 1(1-p) or 0(q) |
+          | 1        | 1     | 1    | 1              |
+          +----------+-------+------+----------------+
+
+
+
+          ]]></artwork>
+        </figure>
+      </section>
+      <section anchor="explained" title="One and a half round-trip explained">
+        <t>
+          Recall the assumptions in <xref target="assumptions"/>. Suppose that a round trip takes <spanx>2n</spanx> time units. If we initialize spin bits at the client and server to 0 (assumption 3), they will both see (SLISB, LISB)= (−,0) after n time units, and an NV change is triggered (assumption 10). Now the client maintains an NV value of 1 while the server sets its NV value to 0.
+        </t>
+
+        <t>
+          The client now transmits spin bits valued <spanx>1</spanx> to the server, while the server continues to transmit spin bits valued <spanx>0</spanx> to the client. After another <spanx>n</spanx> time units (<spanx>2n</spanx> time units in total) the client sees a (SLISB, LISB)-tuple valued <spanx>(0,0)</spanx>, while the server will see a (SLISB, LISB)-tuple <spanx>(1,0)</spanx> (assumption 2). This triggers an attempted reflection by the server, meaning that its NV should be changed from <spanx>0</spanx> to <spanx>1</spanx> (assumption 6), while a change in the client NV (<spanx>1</spanx>) is not triggered (assumption 4). Suppose that the server truthfully reflects its NV to <spanx>1</spanx>. Now the client continues to transmit <spanx>1</spanx>s to the server, while the server transmits <spanx>1</spanx>s to the client. 
+        </t>
+
+        <t>
+          After yet another <spanx>n</spanx> time units (<spanx>3n</spanx> time units in total) the server will see the (SLISB, LISB)-tuple <spanx>(1,1)</spanx> and therefore do nothing (assumption 8), while the client sees the tuple <spanx>(0,1)</spanx> and tries to update its NV (assumption 4). If the client does not do this, so that the client NV remains at <spanx>1</spanx>, then the client will be transmitting <spanx>1</spanx>s to the server and the server will be transmitting <spanx>1</spanx>s to the client. 
+
+        </t>
+
+        <t>
+          After <spanx>4n</spanx> time units, the (SLISB, LISB)-tuples seen by both the client and the server will be <spanx>(1,1)</spanx>, and both NVs will also be set to <spanx>1</spanx>. Consequently, the (lack of) NV updates after <spanx>3n</spanx> time units have landed us in the situation that there is no longer any possibility for a (SLISB, LISB)-tuple to have different values, and we have ended up in a loop.
+
+        </t>
+
+        <t>
+
+          This is encouraging, since a loop can be escaped by randomly re-initializing the spin bit after some time that we can choose.
+        </t>
+
+
+<t>//TODO:sections 3.1.3, 3.2, 3.2.1, 3.2.2.</t>
+
+
+      </section>
     </section>
+  </section>
 
-    <section anchor="discussion2" title="Discussion">
+  <section anchor="simulation" title="Simulation">
 
-      <t>In the introduction to this section, we observed that setting Q=0.5 would make any pattern recognition among the bits extremely difficult for the most advanced of filters. We proceeded to discuss the case Q=0.2 and a potential filter for this case in <xref target="example4" />. If Q is taken to be a parameter under client control, of course the client could set Q so that latency measurements are made impossible. On the other hand, such client control already exists, since the latency spin bit is optional. (see <xref target="RFC6973">Sec. 7.2</xref> and <xref target="I-D-QUIC">Section 17.3.1</xref>). </t>
-
-      <t>In <xref target="example5"/> we introduced the possiblity of yet another parameter P, to be set by the server for determining server-side RRM application. The moving windows filtering method applied to make sense of on-path observations remains the same.</t>
-
-      <t>The filtering methods applied in this section consistently under-estimate the true latency. More accurate latency measurements may be achieved by having a larger number of sequences observed.</t>
-
-    </section>
+    <t>Simulation code for both cases discussed in this document ("RRM at each bit" and "RRM at edge transition") and instructions are hosted on <xref target="SIMULATION">GitHub</xref>.</t>
 
   </section>
 
-</section>
+  <section anchor="conclusion" title="Conclusion">
 
-<section anchor="simulation" title="Simulation">
+    <t>
+It is possible to apply to RRM to QUIC RTT measurements in a way which delays estimation of RTT. However, it is unclear whether RRM has advantages larger than already existing privacy mechanisms included in the QUIC draft (such as making the spin bit optional, or requiring that 1/8 of all streams are not measurable). The privacy concern associated with a spin bit is that latency measurements will enable inference of the location or distance of the device associated with that particular IP address. But the whole point of differential privacy mechanisms, including RRM, is using statistical methods to ensure that data can be made more privacy-preserving while also preserving the data utility. In the case of the spin bit, it is the utility of the data that allegedly violates privacy, which means differential privacy is an intuitively bad tool to address privacy concerns.
+</t>
 
-  <t>TODO</t>
+<t>
 
-</section>
+The spin bit is associated with an IP address, which creates linkability. Any differential privacy mechanism will not remove linkability from the spin bit, and so preserves that angle of privacy violation.
 
-<section anchor="conclusion" title="Conclusion">
+</t>
 
-  <t>The spin bit is associated with an IP address which creates linkability (see <xref target="RFC6973"/> and <xref target="RFC8280"/>). The privacy concern associated with a spin bit is, additionally, that latency measurements will enable inferrence of the location or distance of the device associated with that particular IP address.</t>
+<t>
+RRM could potentially be used to fulfill requirements from the QUIC draft 27, sec. 17.3.1, in a slightly more flexible way than is currently discussed at the IETF. In particular, the parameters <spanx>p</spanx>, <spanx>q</spanx> and <spanx>r</spanx> discussed in section //TODO:parameters could be adjusted to accommodate for any proportion of useful measurements. If <spanx>r</spanx> is left for the client to decide, the client may even have influence over the extent to which RTT measurements through the QUIC spin bit is made more difficult.
+</t>
 
-  <t>In <xref target="example1" />, it was seen Randomized response mechanisms (RRM) would either cause the utility of the spin bit to disappear entirely (by rendering any measurement futile) or cause the primary privacy-reducing inferrence to remain a problem, as long as a sufficiently large amount sequential measurements were done. Each measurement would continue to be tied to fixed identifier, which necessarily implies privacy loss. Interestingly, <xref target="example1" /> also highlights fundamental trade-offs between privacy-preserving mechanisms and measurement utility: by setting Q=0, we were able to avoid ending up in a sink, which would improve the possibility of measurement, but in doing so removed all agency from the client to falsify its responses.</t>
+<t>
+In order to realize such advantages the functioning of the QUIC spin bit does, however, need to be more stringently specified, in particular in line with our suggestions in section <xref target="assumptions"/>.
+</t>
 
-  <t>In <xref target="example4" /> we saw that setting Q=0.5 could obfuscate the spin edge from an on-path observer. Since the latency spin bit is an optional feature, an easier method of accomplishing such obfuscation would be to simply to turn the spin bit off. Setting Q &lt; 0.5 would instead let the client make it easier or more difficult for the on-path observer to correctly estimate latency. In <xref target="example4" /> and <xref target="example5" /> we particularly conclude that under-estimation of latency is the most likely outcome of this RRM.</t>
 
-  <t>It is not clear that RRM would ultimately bring any particular privacy benefit beyond what is already guaranteed in the present specification of the spin bit in <xref target="I-D-QUIC">Section 17.3.1</xref>.</t>
-
-</section>
+  </section>
 
 </middle>
 
@@ -460,6 +476,15 @@
         <author initials='B.' surname='Martini' fullname='B. Martini'><organization /></author>
         <author initials='N.' surname='Ten Oever' fullname='N. Ten Oever'><organization /></author>
         <date year='2018' month='October' />
+      </front>
+    </reference>
+
+    <reference  anchor="SIMULATION" target='https://github.com/ShivanKaul/draft-andersdotter-rrm-for-rrt/tree/master/spinbit_simulation'>
+      <front>
+        <title>https://github.com/ShivanKaul/draft-andersdotter-rrm-for-rrt/tree/master/spinbit_simulation</title>
+        <author initials='S.' surname='Sahib' fullname='S. Sahib'><organization /></author>
+        <author initials='A.' surname='Andersdotter' fullname='A. Andersdotter'><organization /></author>
+        <date year='2019' month='November' />
       </front>
     </reference>
 

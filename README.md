@@ -18,7 +18,6 @@ This requires that you have the necessary software installed.  See
 See the
 [guidelines for contributions](https://github.com/ShivanKaul/draft-andersdotter-rrm-for-rrt/blob/master/CONTRIBUTING.md).
 
-Note: Used [451 Implementation Report Draft GitHub repo](https://github.com/451hackathon/451-imp-report/) as an example for this.
 
 ## Simulation code
-Take a look at `spinbit_simulation/`. Run `make` to do a `clean` and `pip install` and then run `make run` to run the simulation.
+Take a look at `spinbit_simulation/`. 
