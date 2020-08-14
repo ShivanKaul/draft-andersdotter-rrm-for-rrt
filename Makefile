@@ -1,5 +1,5 @@
-DRAFTS = andersdotter-rrm-for-rrt-in-http3-01 
-OUTPUTS = $(foreach draft,$(DRAFTS),draft-${draft}.html draft-${draft}.xml draft-${draft}.txt)
+DRAFTS = andersdotter-rrm-for-rtt-in-quic-01
+OUTPUTS = $(foreach draft,$(DRAFTS),draft-${draft}.html draft-${draft}.txt)
 STAGING = staging.xml
 
 all: $(OUTPUTS)
